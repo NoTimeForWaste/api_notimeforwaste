@@ -5,6 +5,7 @@
 package com.notimeforwaste.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,19 +21,18 @@ import lombok.experimental.SuperBuilder;
  */
 @SuperBuilder
 @Data
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteDto {
-    @NotBlank
+public class ClienteDTO {
+    @NotNull 
     @Size(max=100)
-    protected String nmCliente;
-    @NotBlank
+    private String nmCliente;
+    @NotNull
     @Size(max=70)
     private String email;
-    @NotBlank
+    @NotNull
     @Size(max=15)
     private String senha;
 }

@@ -14,20 +14,19 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-
 /**
  *
  * @author dougl
  */
 @Configuration
 public class JdbiConfig {
-    
+
     @Bean
     @ConfigurationProperties("spring.datasource")
     DataSource driverManagerDataSource() {
         return new DriverManagerDataSource();
     }
-    
+
     @Bean
     Jdbi jdbi(DataSource dataSource) {
         return Jdbi.create(dataSource)

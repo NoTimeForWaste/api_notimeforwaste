@@ -1,11 +1,5 @@
 package com.notimeforwaste.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.sql.Time;
 import lombok.AllArgsConstructor;
@@ -25,18 +19,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "HorarioFuncionamento")
-public class HorarioFuncionamento implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+public class HorarioFuncionamento {
+
     protected int idHorario;
-    @Column(nullable = false, length=45)
     protected String nome;
-    @Column(nullable = false)
     protected Time horarioInicial;
-    @Column(nullable = false)
     protected Time horarioFinal;
-    @Column(nullable = false)
-    protected int idEmpresa;
+    private int idEmpresa;
 }

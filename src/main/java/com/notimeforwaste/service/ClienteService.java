@@ -6,11 +6,8 @@ package com.notimeforwaste.service;
 
 import com.notimeforwaste.dao.ClienteDao;
 import com.notimeforwaste.model.Cliente;
-import jakarta.transaction.Transactional;
-import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import org.jdbi.v3.core.Jdbi;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,34 +17,58 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClienteService {
 
-    @Autowired
     private final ClienteDao clienteDao;
 
-    public ClienteService(ClienteDao clienteDao) {
-        this.clienteDao = clienteDao;
-    }
-    
-    @Transactional     
-    public Cliente save(Cliente cliente) {
-        return clienteDao.save(cliente);
+    public ClienteService(Jdbi jdbi) {
+        this.clienteDao = jdbi.onDemand(ClienteDao.class);
     }
 
-    public boolean existsByEmail(String email) {
+    public Cliente save(Cliente cliente) {
+        // String senhaCriptografada = BCrypt.hashpw(cliente.getSenha(),
+        // BCrypt.gensalt());
+        // cliente.setSenha(senhaCriptografada);
+        cliente.setIdCliente(clienteDao.insert(cliente));
+        return cliente;
+    }
+
+    public int update(int idCliente, String nmCliente, String senha, String email) {
+        Cliente clienteExistente = clienteDao.findById(idCliente);
+        if (clienteExistente != null) {
+            // String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
+            return clienteDao.update(idCliente, nmCliente, senha, email);
+        } else {
+            return -1;
+        }
+    } 
+
+    public Cliente login(String email, String senha) {
+        // Verifique se a senha fornecida corresponde à senha criptografada
+        return clienteDao.login(email, senha);
+
+    }
+
+    public int existsByEmail(String email) {
         return clienteDao.existsByEmail(email);
     }
-    
-    
-    public Page<Cliente> findAll(Pageable pageable) {
-        return clienteDao.findAll(pageable);
-    }
-    
-    
-    public Optional<Cliente> findById(int id) {
-        return clienteDao.findById(id);
+
+    public int existsById(int idCliente) {
+        return clienteDao.existsById(idCliente);
     }
 
-    @Transactional
-    public void delete( Cliente cliente) {
-        clienteDao.delete(cliente);
+    public List<Cliente> findAll() {
+        return clienteDao.findAll();
     }
+
+    public Cliente findById(int idCliente) {
+        return clienteDao.findById(idCliente);
+    }
+
+    public Cliente findByEmail(String email) {
+        return clienteDao.findByEmail(email);
+    }
+
+    public int delete(int idCliente, String senha, String email) {
+        return clienteDao.delete(idCliente, email, email);
+    }
+
 }

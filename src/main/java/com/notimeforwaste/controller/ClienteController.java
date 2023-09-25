@@ -4,18 +4,14 @@
  */
 package com.notimeforwaste.controller;
 
-import com.notimeforwaste.dao.ClienteDao;
-import com.notimeforwaste.dto.ClienteDto;
+import com.notimeforwaste.dto.ClienteDTO;
 import com.notimeforwaste.model.Cliente;
+import com.notimeforwaste.model.Empresa;
+import com.notimeforwaste.response.EmpresaResponse;
 import com.notimeforwaste.service.ClienteService;
 import jakarta.validation.Valid;
-import java.util.Optional;
-import org.jdbi.v3.core.Jdbi;
+import java.util.List;  
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Arthur
  */
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/notimeforwaste/cliente")
 public class ClienteController {
 
@@ -43,51 +39,77 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid ClienteDto clienteDto) {
-        if (clienteService.existsByEmail(clienteDto.getEmail())) {
+    @PostMapping({ "", "/" })
+    public ResponseEntity<Object> save(@RequestBody @Valid ClienteDTO clienteDTO) {
+        var cliente = new Cliente();
+        BeanUtils.copyProperties(clienteDTO, cliente);
+        System.out.print(clienteDTO);
+        if (clienteService.existsByEmail(cliente.getEmail()) > 0) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Esse e-mail já foi cadastrado!");
         }
-        var cliente = new Cliente();
-        BeanUtils.copyProperties(clienteDto, cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.save(cliente));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<Cliente>> getAllParkingSpots(@PageableDefault(page = 0, size = 10, sort = "idCliente", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(clienteService.findAll(pageable));
-    }
+    // @GetMapping
+    // public ResponseEntity<List<Cliente>> getAllClientes() {
+    // return ResponseEntity.status(HttpStatus.OK).body(clienteService.findAll());
+    // }
 
+      @GetMapping("login/{email}/{senha}")
+    public ResponseEntity<Object> login(@PathVariable(value = "email") String email,
+            @PathVariable(value = "senha") String senha) {
+        Cliente cliente = clienteService.findByEmail(email);
+        if (cliente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email inválido.");
+        }
+
+        Cliente result = clienteService.login(email, senha);
+        cliente.setSenha("");
+    
+        return result != null ? ResponseEntity.status(HttpStatus.OK).body(result)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Senha inválida!");
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getClienteById(@PathVariable(value = "id") int id) {
-        Optional<Cliente> clienteOptional = clienteService.findById(id);
-        if (!clienteOptional.isPresent()) {
+        Cliente cliente = clienteService.findById(id);
+        if (cliente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(clienteOptional.get());
+        cliente.setSenha("");
+        return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCliente(@PathVariable(value = "id") int id) {
-        Optional<Cliente> clienteOptional = clienteService.findById(id);
-        if (!clienteOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
-        }
-        clienteService.delete(clienteOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Cliente deletado com sucesso.");
-    }
+    // @DeleteMapping("/deletar/{id}/{email}/{senha}")
+    // public ResponseEntity<Object> deleteCliente(@PathVariable(value = "id") int
+    // id,
+    // @PathVariable(value = "senha") String senha, @PathVariable(value = "email")
+    // String email) {
+    // Cliente cliente = clienteService.findById(id);
+    // if (cliente == null) {
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não
+    // encontrado.");
+    // }
+    // int status = clienteService.delete(cliente.getIdCliente(), email, email);
+
+    // return status > 0 ? ResponseEntity.status(HttpStatus.OK).body(cliente)
+    // : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar
+    // cliente.");
+    // }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCliente(@PathVariable(value = "id") int id,
-            @RequestBody @Valid ClienteDto clienteDto) {
-        Optional<Cliente> clienteOptional = clienteService.findById(id);
-        if (!clienteOptional.isPresent()) {
+            @RequestBody @Valid ClienteDTO clienteDto) {
+        Cliente clienteOptional = clienteService.findById(id);
+        if (clienteOptional == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
         }
         var cliente = new Cliente();
         BeanUtils.copyProperties(clienteDto, cliente);
-        cliente.setIdCliente(clienteOptional.get().getIdCliente());
-        return ResponseEntity.status(HttpStatus.OK).body(clienteService.save(cliente));
+        cliente.setIdCliente(clienteOptional.getIdCliente());
+        int status = clienteService.update(
+                cliente.getIdCliente(), cliente.getNmCliente(), cliente.getSenha(), cliente.getEmail());
+        return status > 0 ? ResponseEntity.status(HttpStatus.OK).body(cliente)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Não foi possível tulizar os dados do cliente!");
     }
 }
