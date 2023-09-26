@@ -30,7 +30,7 @@ public class ClienteService {
         // BCrypt.gensalt());
         // cliente.setSenha(senhaCriptografada);
         cliente.setIdCliente(clienteDao.insert(cliente));
-        return cliente;
+        return cliente.getIdCliente() > 0 ? cliente : null;
     }
 
     public int update(int idCliente, String nmCliente, String senha, String email) {

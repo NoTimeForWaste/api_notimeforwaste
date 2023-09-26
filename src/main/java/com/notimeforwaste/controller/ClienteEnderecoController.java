@@ -54,7 +54,7 @@ public class ClienteEnderecoController {
     @PostMapping({ "", "/" })
     public ResponseEntity<Object> save(@RequestBody Cliente_Endereco clienteEndereco) {
         Cliente_Endereco ret = clienteEnderecoService.save(clienteEndereco);
-        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(clienteEnderecoService.save(clienteEndereco))
+        return ret.getIdCliente() > 0 ? ResponseEntity.status(HttpStatus.OK).body(ret)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 

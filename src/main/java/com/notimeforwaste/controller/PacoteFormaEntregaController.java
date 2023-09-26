@@ -48,10 +48,7 @@ public class PacoteFormaEntregaController {
     @GetMapping("/pacote/{id}")
     public ResponseEntity<Object> getByIdPacote(@PathVariable(value = "id") int id) {
         List<PacoteFormaEntrega> pacoteFormaEntregaList = pacoteFormaEntregaService.findByIdFormaEntrega(id);
-        if (pacoteFormaEntregaList == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(pacoteFormaEntregaList);
+        return pacoteFormaEntregaList != null ? ResponseEntity.status(HttpStatus.OK).body(pacoteFormaEntregaList) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado.");
     }
 
     @DeleteMapping

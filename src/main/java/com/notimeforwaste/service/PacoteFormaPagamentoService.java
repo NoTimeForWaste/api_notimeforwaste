@@ -21,7 +21,7 @@ public class PacoteFormaPagamentoService {
         this.pacoteFormaPagamentoDao = jdbi.onDemand(PacoteFormaPagamentoDao.class);
     }
 
-    public int save(PacoteFormaPagamento pacoteFormaPagamento) {
+    public PacoteFormaPagamento save(PacoteFormaPagamento pacoteFormaPagamento) {
         return pacoteFormaPagamentoDao.insert(pacoteFormaPagamento);
     }
 

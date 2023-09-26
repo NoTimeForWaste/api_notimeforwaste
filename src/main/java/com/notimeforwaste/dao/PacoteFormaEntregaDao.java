@@ -17,7 +17,7 @@ public interface PacoteFormaEntregaDao {
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO Pacote_FormaEntrega (idPacote, idFormaEntrega) VALUES (:idPacote, :idFormaEntrega)")
-    PacoteFormaEntrega insert(@BindBean PacoteFormaEntrega pacoteFormaEntrega);
+    int insert(@BindBean PacoteFormaEntrega pacoteFormaEntrega);
 
     @SqlQuery("SELECT * FROM Pacote_FormaEntrega WHERE idPacote = :idPacote")
     List<PacoteFormaEntrega> findByIdPacote(@Bind("idPacote") int idPacote);

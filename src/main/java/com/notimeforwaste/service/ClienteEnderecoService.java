@@ -29,7 +29,7 @@ public class ClienteEnderecoService {
     }
 
     public Cliente_Endereco save(Cliente_Endereco clienteEndereco) {
-        clienteEnderecoDao.insert(clienteEndereco.getIdEndereco(),
+       int id = clienteEnderecoDao.insert(clienteEndereco.getIdEndereco(),
                 clienteEndereco.getIdCliente());
         return clienteEndereco;
     }

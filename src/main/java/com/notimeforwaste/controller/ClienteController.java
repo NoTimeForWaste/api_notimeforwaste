@@ -47,7 +47,8 @@ public class ClienteController {
         if (clienteService.existsByEmail(cliente.getEmail()) > 0) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Esse e-mail já foi cadastrado!");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.save(cliente));
+        Cliente ret = clienteService.save(cliente);
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao") ;
     }
 
     @GetMapping("login/{email}/{senha}")

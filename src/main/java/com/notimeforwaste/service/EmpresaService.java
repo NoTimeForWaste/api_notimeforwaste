@@ -27,7 +27,7 @@ public class EmpresaService {
 
     public Empresa save(Empresa empresa) {
         empresa.setIdEmpresa(empresaDao.insert(empresa));
-        return empresa;
+        return empresa.getIdEmpresa() > 0 ? empresa : null;
     }
 
     public int update(Empresa empresa) {

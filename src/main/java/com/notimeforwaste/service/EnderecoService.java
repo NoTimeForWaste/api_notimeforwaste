@@ -24,10 +24,10 @@ public class EnderecoService {
     public EnderecoService(Jdbi jdbi) {
         this.enderecoDao = jdbi.onDemand(EnderecoDao.class);
     }
-
+ 
     public Endereco save(Endereco endereco) {
         endereco.setIdEndereco(enderecoDao.insert(endereco));
-        return endereco;
+        return endereco.getIdEndereco() > 0 ? endereco : null;
     }
 
     public Endereco update(Endereco endereco) {
