@@ -85,13 +85,13 @@ public class HorarioFuncionamentoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletar(@PathVariable("id") int id) {
+    public ResponseEntity<Object> deletar(@PathVariable("id") int id) {
         HorarioFuncionamento horario = horarioFuncionamentoService.findById(id);
         if (horario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horario não encontrado.");
         }
         int ret = horarioFuncionamentoService.delete(horario.getIdHorario());
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Horario deletado com sucesso.")
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(horario)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 

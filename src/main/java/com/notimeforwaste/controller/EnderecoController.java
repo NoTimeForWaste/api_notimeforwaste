@@ -60,7 +60,7 @@ public class EnderecoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
         }
         int ret = enderecoService.delete(endereco.getIdEndereco());
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Endereço deletado com sucesso.") :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar endereço.")  ;
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(endereco) :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar endereço.")  ;
     }
 
     @PutMapping("/{id}")

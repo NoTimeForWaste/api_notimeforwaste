@@ -18,7 +18,7 @@ public class PacoteFormaEntregaService {
         this.pacoteFormaEntregaDao = jdbi.onDemand(PacoteFormaEntregaDao.class);
     }
 
-    public int save(PacoteFormaEntrega pacoteFormaEntrega) {
+    public PacoteFormaEntrega save(PacoteFormaEntrega pacoteFormaEntrega) {
         return pacoteFormaEntregaDao.insert(pacoteFormaEntrega);
     }
 
@@ -34,8 +34,8 @@ public class PacoteFormaEntregaService {
         return pacoteFormaEntregaDao.findByIdPacoteAndIdFormaEntrega(pacoteFormaEntrega);
     }
 
-    public void delete(PacoteFormaEntrega pacoteFormaEntrega) {
-        pacoteFormaEntregaDao.delete(pacoteFormaEntrega);
+    public int delete(PacoteFormaEntrega pacoteFormaEntrega) {
+        return pacoteFormaEntregaDao.delete(pacoteFormaEntrega);
     }
 
 }

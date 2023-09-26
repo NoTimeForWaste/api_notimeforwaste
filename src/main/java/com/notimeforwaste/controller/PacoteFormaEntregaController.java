@@ -41,7 +41,8 @@ public class PacoteFormaEntregaController {
         if (formaEntregaService.findById(pacoteFormaEntrega.getIdFormaEntrega()) == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Forma de entrega não cadastrada no sistema!");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(pacoteFormaEntregaService.save(pacoteFormaEntrega));
+        PacoteFormaEntrega ret = pacoteFormaEntregaService.save(pacoteFormaEntrega);
+        return ret != null ?  ResponseEntity.status(HttpStatus.CREATED).body(pacoteFormaEntrega) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar");
     }
 
     @GetMapping("/pacote/{id}")
@@ -58,8 +59,8 @@ public class PacoteFormaEntregaController {
         if (pacoteFormaEntregaService.findByIdFormaEntregaAndidPacote(pacoteFormaEntrega) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar.");
         }
-        pacoteFormaEntregaService.delete(pacoteFormaEntrega);
-        return ResponseEntity.status(HttpStatus.OK).body(pacoteFormaEntrega);
+        int ret = pacoteFormaEntregaService.delete(pacoteFormaEntrega);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(pacoteFormaEntrega) :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar");
     }
 
 }

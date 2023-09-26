@@ -38,7 +38,7 @@ public class ClienteEnderecoService {
         return clienteEnderecoDao.findByIdCliente(id);
     }
 
-    public List<Cliente_Endereco> findByIdEndereco(int id) {
+    public Cliente_Endereco findByIdEndereco(int id) {
         return clienteEnderecoDao.findByIdEndereco(id);
     }
 

@@ -76,7 +76,8 @@ public class PacoteController {
         if (pacote == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não encontrado.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(pacoteService.delete(pacote.getIdPacote()));
+        int ret = pacoteService.delete(pacote.getIdPacote());
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(pacote) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.") ;
     }
 
     @PutMapping("/{id}")

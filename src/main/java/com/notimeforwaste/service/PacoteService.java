@@ -13,7 +13,7 @@ import com.notimeforwaste.model.Pacote;
 import com.notimeforwaste.model.PacoteFormaEntrega;
 import com.notimeforwaste.model.PacoteFormaPagamento;
 import com.notimeforwaste.model.Produto;
-import com.notimeforwaste.response.EmpresResponse;
+import com.notimeforwaste.response.EmpresaResponse;
 import com.notimeforwaste.response.PacoteResponse;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class PacoteService {
         Pacote pacote = findById(idPacote);
 
         PacoteResponse pacoteResponse = new PacoteResponse();
-        EmpresResponse empresa = empresaService.findById(pacote.getIdEmpresa());
+        EmpresaResponse empresa = empresaService.findById(pacote.getIdEmpresa());
         Foto foto = fotoService.findById(pacote.getIdFoto());
         List<Produto> produtos = produtoService.findByIdPacote(pacote.getIdPacote());
         List<PacoteFormaEntrega> pacoteFormaEntregaList = pacoteFormaEntregaService.findByIdPacote(idPacote);

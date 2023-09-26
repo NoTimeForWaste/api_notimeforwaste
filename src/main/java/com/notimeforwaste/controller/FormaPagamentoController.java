@@ -58,7 +58,7 @@ public class FormaPagamentoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não encontrada.");
         }
         int ret = formaPagamentoService.delete(formaPagamento.getIdFormaPagamento());
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Forma de Pagamento deletada com sucesso.") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(formaPagamento) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
     // @PutMapping("/{id}")

@@ -28,7 +28,7 @@ public interface ClienteEnderecoDao {
     List<Cliente_Endereco> findByIdCliente(@Bind("idCliente") int idCliente);
 
     @SqlQuery("SELECT * FROM Cliente_Endereco WHERE idEndereco = :idEndereco")
-    List<Cliente_Endereco> findByIdEndereco(@Bind("idEndereco") int idEndereco);
+    Cliente_Endereco findByIdEndereco(@Bind("idEndereco") int idEndereco);
 
     @SqlQuery("SELECT * FROM Cliente_Endereco WHERE idEndereco = :idEndereco AND idCliente = :idCliente")
     List<Cliente_Endereco> findByIdEnderecoAndIdCliente(@Bind("idEndereco") int idEndereco, int idCliente);

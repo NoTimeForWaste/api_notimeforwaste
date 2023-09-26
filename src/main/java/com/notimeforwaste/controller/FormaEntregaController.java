@@ -57,7 +57,7 @@ public class FormaEntregaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Entrega não encontrada.");
         }
         int ret = formaEntregaService.delete(formaEntrega.getIdFormaEntrega());
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Forma de Entrega deletada com sucesso.") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(formaEntrega) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
     // @PutMapping("/{id}")

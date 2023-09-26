@@ -99,7 +99,7 @@ public class FotoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
         }
         int ret = fotoService.delete(foto.getIdFoto());
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Foto deletada com sucesso.") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
     @PutMapping("/{id}")

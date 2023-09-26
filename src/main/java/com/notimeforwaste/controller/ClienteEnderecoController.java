@@ -40,24 +40,32 @@ public class ClienteEnderecoController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> findByIdCliente(@PathVariable("id") int id) {
         List<Cliente_Endereco> ret = clienteEnderecoService.findByIdCliente(id);
-        return ret != null ?  ResponseEntity.status(HttpStatus.OK).body(ret) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
+        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(ret)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
     }
 
     @GetMapping("{idCliente}/enderecosbycliente")
     public ResponseEntity<Object> findEnderecosByIdCliente(@PathVariable("idCliente") int idCliente) {
         List<Endereco> ret = clienteEnderecoService.findEnderecosByIdCliente(idCliente);
-        return ret != null ?  ResponseEntity.status(HttpStatus.CREATED).body(ret) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente sem endereços cadastrados.");
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente sem endereços cadastrados.");
     }
 
     @PostMapping({ "", "/" })
     public ResponseEntity<Object> save(@RequestBody Cliente_Endereco clienteEndereco) {
         Cliente_Endereco ret = clienteEnderecoService.save(clienteEndereco);
-        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(clienteEnderecoService.save(clienteEndereco)) :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
+        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(clienteEnderecoService.save(clienteEndereco))
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 
     @DeleteMapping("/{idEndereco}/byendereco")
     public ResponseEntity<Object> deletar(@PathVariable("idEndereco") int idEndereco) {
-       int ret = clienteEnderecoService.deleteAllByIdEndereco(idEndereco);
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso!") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.") ;
+        Cliente_Endereco endereco = clienteEnderecoService.findByIdEndereco(idEndereco);
+        if (endereco == null) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado.");
+        }
+        int ret = clienteEnderecoService.deleteAllByIdEndereco(idEndereco);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(endereco)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 }
