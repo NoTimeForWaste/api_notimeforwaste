@@ -88,26 +88,18 @@ public class FotoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getFotoById(@PathVariable(value = "id") int id) {
-        Foto fotoOptional = fotoService.findById(id);
-        if (fotoOptional == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(fotoOptional);
+        Foto foto = fotoService.findById(id);
+        return foto != null ?  ResponseEntity.status(HttpStatus.OK).body(foto) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.") ;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteFoto(@PathVariable(value = "id") int id) {
-        Foto fotoOptional = fotoService.findById(id);
-        if (fotoOptional == null) {
+        Foto foto = fotoService.findById(id);
+        if (foto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
         }
-        fotoService.delete(fotoOptional.getIdFoto());
-        return ResponseEntity.status(HttpStatus.OK).body("Foto deletada com sucesso.");
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Foto>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(fotoService.findAll());
+        int ret = fotoService.delete(foto.getIdFoto());
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Foto deletada com sucesso.") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
     @PutMapping("/{id}")
@@ -120,7 +112,7 @@ public class FotoController {
         var foto = new Foto();
         BeanUtils.copyProperties(fotoDTO, foto);
         foto.setIdFoto(fotoOptional.getIdFoto());
-        fotoService.update(foto);
-        return ResponseEntity.status(HttpStatus.OK).body(foto);
+       int ret = fotoService.update(foto);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar.");
     }
 }

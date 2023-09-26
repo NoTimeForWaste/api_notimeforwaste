@@ -7,7 +7,6 @@ package com.notimeforwaste.controller;
 import com.notimeforwaste.model.FormaPagamento;
 import com.notimeforwaste.service.FormaPagamentoService;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,21 +35,20 @@ public class FormaPagamentoController {
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody FormaPagamento formaPagamento) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(formaPagamentoService.save(formaPagamento));
+        FormaPagamento ret = formaPagamentoService.save(formaPagamento);
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(formaPagamento) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamento>> getAll() {
+    public ResponseEntity<Object> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(formaPagamentoService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable(value = "id") int id) {
         FormaPagamento formaPagamento = formaPagamentoService.findById(id);
-        if (formaPagamento == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não diisponível.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(formaPagamento);
+        return formaPagamento != null ? ResponseEntity.status(HttpStatus.OK).body(formaPagamento) :  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não diisponível.");
+        
     }
 
     @DeleteMapping("/{id}")
@@ -59,20 +57,20 @@ public class FormaPagamentoController {
         if (formaPagamento == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não encontrada.");
         }
-        formaPagamentoService.delete(formaPagamento.getIdFormaPagamento());
-        return ResponseEntity.status(HttpStatus.OK).body("Forma de Pagamento deletada com sucesso.");
+        int ret = formaPagamentoService.delete(formaPagamento.getIdFormaPagamento());
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Forma de Pagamento deletada com sucesso.") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable(value = "id") int id,
-            @RequestBody FormaPagamento formaPagamento) {
-        FormaPagamento formaPagamentoOptional = formaPagamentoService.findById(id);
-        if (formaPagamentoOptional == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não encontrada.");
-        }
+    // @PutMapping("/{id}")
+    // public ResponseEntity<Object> update(@PathVariable(value = "id") int id,
+    //         @RequestBody FormaPagamento formaPagamento) {
+    //     FormaPagamento formaPagamentoOptional = formaPagamentoService.findById(id);
+    //     if (formaPagamentoOptional == null) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não encontrada.");
+    //     }
 
-        formaPagamento.setIdFormaPagamento(formaPagamentoOptional.getIdFormaPagamento());
-        formaPagamentoService.update(formaPagamento);
-        return ResponseEntity.status(HttpStatus.OK).body(formaPagamento);
-    }
+    //     formaPagamento.setIdFormaPagamento(formaPagamentoOptional.getIdFormaPagamento());
+    //     formaPagamentoService.update(formaPagamento);
+    //     return ResponseEntity.status(HttpStatus.OK).body(formaPagamento);
+    // }
 }

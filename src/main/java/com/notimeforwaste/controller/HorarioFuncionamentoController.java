@@ -5,13 +5,11 @@
 package com.notimeforwaste.controller;
 
 import com.notimeforwaste.dto.HorarioFuncionamentoDTO;
-import com.notimeforwaste.model.Endereco;
 import com.notimeforwaste.model.HorarioFuncionamento;
 import com.notimeforwaste.service.EmpresaService;
 import com.notimeforwaste.service.HorarioFuncionamentoService;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,26 +46,30 @@ public class HorarioFuncionamentoController {
         var horarioFuncionamento = new HorarioFuncionamento();
         BeanUtils.copyProperties(horarioDTO, horarioFuncionamento);
         if (empresaService.findById(horarioFuncionamento.getIdEmpresa()) == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Empresa não encontrada.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(horarioFuncionamentoService.save(horarioFuncionamento));
+        HorarioFuncionamento ret = horarioFuncionamentoService.save(horarioFuncionamento);
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(horarioFuncionamento)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 
     @GetMapping({ "/", "" })
-    public ResponseEntity<List<HorarioFuncionamento>> findAll() {
+    public ResponseEntity<Object> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(horarioFuncionamentoService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HorarioFuncionamento> findById(@PathVariable("id") int id) {
+    public ResponseEntity<Object> findById(@PathVariable("id") int id) {
         HorarioFuncionamento ret = horarioFuncionamentoService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(ret);
+        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(ret)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horário não encontrado");
     }
 
     @GetMapping("/empresa/{id}")
-    public List<HorarioFuncionamento> findByEmpresaId(@PathVariable("id") int id) {
+    public ResponseEntity<Object> findByEmpresaId(@PathVariable("id") int id) {
         List<HorarioFuncionamento> horariosList = horarioFuncionamentoService.findByEmpresaId(id);
-        return horariosList;
+        return horariosList != null ? ResponseEntity.status(HttpStatus.OK).body(horariosList)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Essa empresa não possui horários cadastrados.");
     }
 
     @PutMapping({ "", "/" })
@@ -76,9 +78,10 @@ public class HorarioFuncionamentoController {
         if (horario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horario não encontrado.");
         }
-        horarioFuncionamentoService.update(horarioFuncionamento);
+        int ret = horarioFuncionamentoService.update(horarioFuncionamento);
 
-        return ResponseEntity.status(HttpStatus.OK).body(horario);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(horario)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar.");
     }
 
     @DeleteMapping("/{id}")
@@ -87,8 +90,9 @@ public class HorarioFuncionamentoController {
         if (horario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horario não encontrado.");
         }
-        horarioFuncionamentoService.delete(horario.getIdHorario());
-        return ResponseEntity.status(HttpStatus.OK).body("Horario deletado com sucesso.");
+        int ret = horarioFuncionamentoService.delete(horario.getIdHorario());
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Horario deletado com sucesso.")
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
 }

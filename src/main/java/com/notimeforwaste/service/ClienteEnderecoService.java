@@ -75,13 +75,13 @@ public class ClienteEnderecoService {
         clienteEnderecoDao.deleteByIdCliente(idCliente);
     }
 
-    public void deleteAllByIdEndereco(int idEndereco) {
+    public int deleteAllByIdEndereco(int idEndereco) {
         // List<ClienteEndereco> enderecoClienteList =
         // clienteEnderecoDao.findByIdCliente(idCliente);
 
         // for (ClienteEndereco enderecoCliente : enderecoClienteList) {
         // }
-        clienteEnderecoDao.deleteByIdEndereo(idEndereco);
+        return clienteEnderecoDao.deleteByIdEndereo(idEndereco);
 
     }
 

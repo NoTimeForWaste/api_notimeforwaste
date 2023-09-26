@@ -18,8 +18,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cliente {
-//    private static final long serialVersionUID = 1L;
-
     protected int idCliente;
     protected String email;
     protected String nmCliente;

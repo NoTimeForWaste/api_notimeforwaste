@@ -6,6 +6,8 @@ package com.notimeforwaste.dao;
 
 import com.notimeforwaste.model.Cliente;
 import com.notimeforwaste.model.Empresa;
+import com.notimeforwaste.response.EmpresaResponse;
+
 import java.util.List;
 import java.util.Optional;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
@@ -27,16 +29,16 @@ public interface EmpresaDao {
         int insert(@BindBean Empresa empresa);
 
         @SqlQuery("select * from Empresa")
-        List<Empresa> findAll();
+        List<EmpresaResponse> findAll();
 
         @SqlQuery("select * from Empresa where idEmpresa = :idEmpresa")
-        Empresa findById(@Bind("idEmpresa") int idEmpresa);
+        EmpresaResponse findById(@Bind("idEmpresa") int idEmpresa);
 
         @SqlQuery("select * from Empresa where email = :email")
-        Empresa findByEmail(@Bind("email") String email);
+        EmpresaResponse findByEmail(@Bind("email") String email);
 
         @SqlQuery("select * from Empresa where email = :email and senha = :senha")
-        Empresa login(@Bind("email") String email, @Bind("senha") String senha);
+        EmpresaResponse login(@Bind("email") String email, @Bind("senha") String senha);
 
         @SqlQuery("select count(*) "
                         + " from Empresa "
@@ -51,10 +53,8 @@ public interface EmpresaDao {
         @SqlUpdate("update Empresa "
                         + " set nmEmpresa = :nmEmpresa, "
                         + "     senha = :senha, "
-                        + "     idFoto = :idFoto, "
-                        + "     idEndereco = :idEndereco "
                         + "     telefone = :telefone "
-                        + " where idEmpresa = :idEmpresa and email;")
+                        + " where idEmpresa = :idEmpresa;")
         int update(@BindBean Empresa empresa);
 
         @SqlUpdate("delete "

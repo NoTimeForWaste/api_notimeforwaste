@@ -13,6 +13,7 @@ import com.notimeforwaste.model.Pacote;
 import com.notimeforwaste.model.PacoteFormaEntrega;
 import com.notimeforwaste.model.PacoteFormaPagamento;
 import com.notimeforwaste.model.Produto;
+import com.notimeforwaste.response.EmpresResponse;
 import com.notimeforwaste.response.PacoteResponse;
 
 import java.util.ArrayList;
@@ -62,16 +63,24 @@ public class PacoteService {
         return pacote;
     }
 
-    public List<Pacote> findAll() {
-        return pacoteDao.findAll();
+    public List<PacoteResponse> findAllWithoutOrders() {
+        List<Pacote> pacotes = pacoteDao.findAllWithoutOrders();
+        List<PacoteResponse> pacotesResponses = new ArrayList<PacoteResponse>();
+        if(pacotes != null){
+            for(int i = 0; i < pacotes.size(); i ++){
+                PacoteResponse pacoteResponse = this.getResponseById(pacotes.get(i).getIdPacote());
+                pacotesResponses.add(pacoteResponse);
+            }
+        }
+        return pacotesResponses;
     }
 
     public Pacote findById(int id) {
         return pacoteDao.findById(id);
     }
 
-    public void delete(int idPacote) {
-        pacoteDao.delete(idPacote);
+    public int delete(int idPacote) {
+       return pacoteDao.delete(idPacote);
     }
 
     public void update(Pacote pacote) {
@@ -82,7 +91,7 @@ public class PacoteService {
         Pacote pacote = findById(idPacote);
 
         PacoteResponse pacoteResponse = new PacoteResponse();
-        Empresa empresa = empresaService.findById(pacote.getIdEmpresa());
+        EmpresResponse empresa = empresaService.findById(pacote.getIdEmpresa());
         Foto foto = fotoService.findById(pacote.getIdFoto());
         List<Produto> produtos = produtoService.findByIdPacote(pacote.getIdPacote());
         List<PacoteFormaEntrega> pacoteFormaEntregaList = pacoteFormaEntregaService.findByIdPacote(idPacote);

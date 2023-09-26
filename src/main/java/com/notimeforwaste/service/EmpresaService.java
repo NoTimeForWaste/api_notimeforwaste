@@ -6,10 +6,10 @@ package com.notimeforwaste.service;
 
 import com.notimeforwaste.dao.EmpresaDao;
 import com.notimeforwaste.model.Empresa;
+import com.notimeforwaste.response.EmpresaResponse;
+
 import java.util.List;
-import java.util.Optional;
 import org.jdbi.v3.core.Jdbi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,19 +42,19 @@ public class EmpresaService {
         return empresaDao.existsByCNPJ(CNPJ);
     }
 
-    public List<Empresa> findAll() {
+    public List<EmpresaResponse> findAll() {
         return empresaDao.findAll();
     }
 
-    public Empresa findById(int id) {
+    public EmpresaResponse findById(int id) {
         return empresaDao.findById(id);
     }
 
-    public Empresa findByEmail(String email) {
+    public EmpresaResponse findByEmail(String email) {
         return empresaDao.findByEmail(email);
     }
 
-    public Empresa login(String email, String senha) {
+    public EmpresaResponse login(String email, String senha) {
         return empresaDao.login(email, senha);
     }
 

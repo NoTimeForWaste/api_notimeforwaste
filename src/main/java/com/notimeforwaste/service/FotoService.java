@@ -39,12 +39,12 @@ public class FotoService {
         return fotoDao.findById(id);
     }
 
-    public void delete(int idFoto) {
-        fotoDao.delete(idFoto);
+    public int delete(int idFoto) {
+       return fotoDao.delete(idFoto);
     }
 
-    public void update(Foto foto) {
-        fotoDao.update(foto.getIdFoto(), foto.getFotoUrl());
+    public int update(Foto foto) {
+        return fotoDao.update(foto.getIdFoto(), foto.getFotoUrl());
     }
 
 }

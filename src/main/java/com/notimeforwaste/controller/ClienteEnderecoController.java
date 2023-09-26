@@ -4,16 +4,11 @@
  */
 package com.notimeforwaste.controller;
 
-import com.notimeforwaste.dto.ClienteDTO;
 import com.notimeforwaste.model.Cliente_Endereco;
 import com.notimeforwaste.model.Endereco;
-import com.notimeforwaste.model.HorarioFuncionamento;
 import com.notimeforwaste.service.ClienteEnderecoService;
 import com.notimeforwaste.service.ClienteService;
-import com.notimeforwaste.service.HorarioFuncionamentoService;
-import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,25 +40,24 @@ public class ClienteEnderecoController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> findByIdCliente(@PathVariable("id") int id) {
         List<Cliente_Endereco> ret = clienteEnderecoService.findByIdCliente(id);
-        return ResponseEntity.status(HttpStatus.OK).body(ret);
+        return ret != null ?  ResponseEntity.status(HttpStatus.OK).body(ret) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
     }
 
     @GetMapping("{idCliente}/enderecosbycliente")
     public ResponseEntity<Object> findEnderecosByIdCliente(@PathVariable("idCliente") int idCliente) {
         List<Endereco> ret = clienteEnderecoService.findEnderecosByIdCliente(idCliente);
-        return ResponseEntity.status(HttpStatus.OK).body(ret);
-
+        return ret != null ?  ResponseEntity.status(HttpStatus.CREATED).body(ret) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente sem endereços cadastrados.");
     }
 
     @PostMapping({ "", "/" })
     public ResponseEntity<Object> save(@RequestBody Cliente_Endereco clienteEndereco) {
-        return ResponseEntity.status(HttpStatus.OK).body(clienteEnderecoService.save(clienteEndereco));
-
+        Cliente_Endereco ret = clienteEnderecoService.save(clienteEndereco);
+        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(clienteEnderecoService.save(clienteEndereco)) :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 
     @DeleteMapping("/{idEndereco}/byendereco")
     public ResponseEntity<Object> deletar(@PathVariable("idEndereco") int idEndereco) {
-        clienteEnderecoService.deleteAllByIdEndereco(idEndereco);
-        return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso");
+       int ret = clienteEnderecoService.deleteAllByIdEndereco(idEndereco);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso!") : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.") ;
     }
 }

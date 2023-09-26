@@ -6,6 +6,8 @@ package com.notimeforwaste.service;
 
 import com.notimeforwaste.dao.ClienteDao;
 import com.notimeforwaste.model.Cliente;
+import com.notimeforwaste.response.ClienteResponse;
+
 import java.util.List;
 import org.jdbi.v3.core.Jdbi;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class ClienteService {
     }
 
     public int update(int idCliente, String nmCliente, String senha, String email) {
-        Cliente clienteExistente = clienteDao.findById(idCliente);
+        ClienteResponse clienteExistente = clienteDao.findById(idCliente);
         if (clienteExistente != null) {
             // String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
             return clienteDao.update(idCliente, nmCliente, senha, email);
@@ -41,8 +43,7 @@ public class ClienteService {
         }
     } 
 
-    public Cliente login(String email, String senha) {
-        // Verifique se a senha fornecida corresponde à senha criptografada
+    public ClienteResponse login(String email, String senha) {
         return clienteDao.login(email, senha);
 
     }
@@ -55,15 +56,15 @@ public class ClienteService {
         return clienteDao.existsById(idCliente);
     }
 
-    public List<Cliente> findAll() {
+    public List<ClienteResponse> findAll() {
         return clienteDao.findAll();
     }
 
-    public Cliente findById(int idCliente) {
+    public ClienteResponse findById(int idCliente) {
         return clienteDao.findById(idCliente);
     }
 
-    public Cliente findByEmail(String email) {
+    public ClienteResponse findByEmail(String email) {
         return clienteDao.findByEmail(email);
     }
 

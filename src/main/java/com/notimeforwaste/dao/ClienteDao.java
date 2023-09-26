@@ -5,6 +5,8 @@
 package com.notimeforwaste.dao;
 
 import com.notimeforwaste.model.Cliente;
+import com.notimeforwaste.response.ClienteResponse;
+
 import java.util.List;
 import java.util.Optional;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
@@ -27,13 +29,13 @@ public interface ClienteDao {
         int insert(@BindBean Cliente cliente);
 
         @SqlQuery("select * from Cliente")
-        List<Cliente> findAll();
+        List<ClienteResponse> findAll();
 
         @SqlQuery("select * from Cliente where idCliente = :idCliente")
-        Cliente findById(@Bind("idCliente") int idCliente);
+        ClienteResponse findById(@Bind("idCliente") int idCliente);
 
         @SqlQuery("select * from Cliente where email = :email")
-        Cliente findByEmail(@Bind("email") String email);
+        ClienteResponse findByEmail(@Bind("email") String email);
 
         @SqlQuery("select count(*) "
                         + " from Cliente "
@@ -47,7 +49,7 @@ public interface ClienteDao {
 
         @SqlQuery("select * from Cliente "
                         + " where email = :email and senha = :senha;")
-        Cliente login(@Bind("email") String email, @Bind("senha") String senha);
+        ClienteResponse login(@Bind("email") String email, @Bind("senha") String senha);
 
         @SqlUpdate("update Cliente "
                         + " set nmCliente = :nmCliente, "

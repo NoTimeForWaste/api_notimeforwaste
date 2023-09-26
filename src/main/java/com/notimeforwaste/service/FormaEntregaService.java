@@ -42,8 +42,8 @@ public class FormaEntregaService {
         return formaEntregaDao.findById(idFormaEntrega);
     }
 
-    public void delete(int idFormaEntrega) {
-        formaEntregaDao.delete(idFormaEntrega);
+    public int delete(int idFormaEntrega) {
+        return formaEntregaDao.delete(idFormaEntrega);
     }
 
     public int existsById(int idFormaEntrega) {

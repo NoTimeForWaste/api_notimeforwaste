@@ -5,30 +5,14 @@
 package com.notimeforwaste.controller;
 
 import com.notimeforwaste.dto.PacoteDTO;
-import com.notimeforwaste.model.Empresa;
-import com.notimeforwaste.model.FormaEntrega;
-import com.notimeforwaste.model.FormaPagamento;
-import com.notimeforwaste.model.Foto;
 import com.notimeforwaste.model.Pacote;
-import com.notimeforwaste.model.PacoteFormaEntrega;
-import com.notimeforwaste.model.PacoteFormaPagamento;
-import com.notimeforwaste.model.Produto;
+
 import com.notimeforwaste.response.PacoteResponse;
-import com.notimeforwaste.service.ClienteService;
 import com.notimeforwaste.service.EmpresaService;
-import com.notimeforwaste.service.EnderecoService;
-import com.notimeforwaste.service.FormaEntregaService;
-import com.notimeforwaste.service.FormaPagamentoService;
-import com.notimeforwaste.service.FotoService;
-import com.notimeforwaste.service.PacoteFormaEntregaService;
-import com.notimeforwaste.service.PacoteFormaPagamentoService;
 import com.notimeforwaste.service.PacoteService;
-import com.notimeforwaste.service.PedidoService;
-import com.notimeforwaste.service.ProdutoService;
 
 import jakarta.validation.Valid;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -69,32 +53,21 @@ public class PacoteController {
         if (empresaService.findById(pacote.getIdEmpresa()) == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao cadastrar! Empresa não encontrada.!");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(pacoteService.save(pacote));
+        Pacote ret = pacoteService.save(pacote);
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(pacote) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar");
     }
 
     @GetMapping
-    public ResponseEntity<List<Pacote>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(pacoteService.findAll());
+    public ResponseEntity<Object> findAllWithoutOrders() {
+        List<PacoteResponse> pacotes = pacoteService.findAllWithoutOrders();
+        return ResponseEntity.status(HttpStatus.OK).body(pacotes);
     }
-
-    // @GetMapping("/{id}")
-    // public ResponseEntity<Object> getById(@PathVariable(value = "id") int id) {
-    // Pacote pacote = pacoteService.findById(id);
-    // if (pacote == null) {
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não
-    // encontrado.");
-    // }
-    // return ResponseEntity.status(HttpStatus.OK).body(pacote);
-    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable(value = "id") int id) {
-        Pacote pacote = pacoteService.findById(id);
-        if (pacote == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não encontrado.");
-        }
         PacoteResponse pacoteResponse = pacoteService.getResponseById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(pacoteResponse);
+        return pacoteResponse != null ? ResponseEntity.status(HttpStatus.OK).body(pacoteResponse)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não encontrado.");
     }
 
     @DeleteMapping("/{id}")
@@ -103,8 +76,7 @@ public class PacoteController {
         if (pacote == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não encontrado.");
         }
-        pacoteService.delete(pacote.getIdPacote());
-        return ResponseEntity.status(HttpStatus.OK).body("Pacote deletado com sucesso.");
+        return ResponseEntity.status(HttpStatus.OK).body(pacoteService.delete(pacote.getIdPacote()));
     }
 
     @PutMapping("/{id}")

@@ -43,8 +43,8 @@ public class EnderecoService {
         return enderecoDao.findById(id);
     }
 
-    public void delete(int idEndereco) {
-        enderecoDao.delete(idEndereco);
+    public int delete(int idEndereco) {
+        return enderecoDao.delete(idEndereco);
     }
 
     public int existsById(int idEndereco) {

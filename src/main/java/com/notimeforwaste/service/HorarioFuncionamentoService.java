@@ -30,8 +30,8 @@ public class HorarioFuncionamentoService {
         return horario;
     }
 
-    public void update(HorarioFuncionamento horario) {
-        horarioFuncionamentoDao.update(horario);
+    public int update(HorarioFuncionamento horario) {
+        return horarioFuncionamentoDao.update(horario);
     }
 
     public List<HorarioFuncionamento> findAll() {
@@ -46,7 +46,7 @@ public class HorarioFuncionamentoService {
         return horarioFuncionamentoDao.findByIdEmpresa(id);
     }
 
-    public void delete(int idHorario) {
-        horarioFuncionamentoDao.delete(idHorario);
+    public int delete(int idHorario) {
+        return horarioFuncionamentoDao.delete(idHorario);
     }
 }

@@ -43,8 +43,8 @@ public class FormaPagamentoService {
         return formaPagamentoDao.findById(idFormaPagamento);
     }
 
-    public void delete(int idFormaPagamento) {
-        formaPagamentoDao.delete(idFormaPagamento);
+    public int delete(int idFormaPagamento) {
+       return formaPagamentoDao.delete(idFormaPagamento);
     }
 
     public int existsById(int idFormaPagamento) {
