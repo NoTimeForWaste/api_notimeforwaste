@@ -6,8 +6,11 @@ package com.notimeforwaste.controller;
 
 import com.notimeforwaste.dto.ProdutoDTO;
 import com.notimeforwaste.model.Produto;
+import com.notimeforwaste.response.PacoteResponse;
 import com.notimeforwaste.service.ProdutoService;
 import jakarta.validation.Valid;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -41,7 +44,9 @@ public class ProdutoController {
     public ResponseEntity<Object> save(@RequestBody @Valid ProdutoDTO produtoDTO) {
         var produto = new Produto();
         BeanUtils.copyProperties(produtoDTO, produto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.save(produto));
+        Produto ret = produtoService.save(produto);
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(produto)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 
     @GetMapping("/{id}")
@@ -53,14 +58,21 @@ public class ProdutoController {
         return ResponseEntity.status(HttpStatus.OK).body(produto);
     }
 
+    @GetMapping("/{idPacote}")
+    public ResponseEntity<Object> getByIdPacote(@PathVariable(value = "idPacote") int idPacote) {
+        List<Produto> produtos = produtoService.findByIdPacote(idPacote);
+        return ResponseEntity.status(HttpStatus.OK).body(produtos);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable(value = "id") int id) {
         Produto produto = produtoService.findById(id);
         if (produto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
         }
-        produtoService.delete(produto.getIdProduto());
-        return ResponseEntity.status(HttpStatus.OK).body("Produto deletado com sucesso.");
+        int ret = produtoService.delete(produto.getIdProduto());
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(produto)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar");
     }
 
     @PutMapping("/{id}")
@@ -72,7 +84,8 @@ public class ProdutoController {
         }
         var produto = new Produto();
         BeanUtils.copyProperties(produtoOptional, produto);
-        produtoService.update(produto);
-        return ResponseEntity.status(HttpStatus.OK).body(produto);
+        int ret = produtoService.update(produto);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(produto)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 }

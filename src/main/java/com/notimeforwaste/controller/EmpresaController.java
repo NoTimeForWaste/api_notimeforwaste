@@ -60,6 +60,15 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(empresa);
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<Object> getEmpresaByEmail(@PathVariable(value = "email") String email) {
+        EmpresaResponse empresa = empresaService.findByEmail(email);
+        if (empresa == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(empresa);
+    }
+
     @GetMapping("login/{email}/{senha}")
     public ResponseEntity<Object> login(@PathVariable(value = "email") String email,
             @PathVariable(value = "senha") String senha) {

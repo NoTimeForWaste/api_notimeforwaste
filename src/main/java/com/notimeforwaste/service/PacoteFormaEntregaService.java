@@ -19,7 +19,8 @@ public class PacoteFormaEntregaService {
     }
 
     public PacoteFormaEntrega save(PacoteFormaEntrega pacoteFormaEntrega) {
-        return pacoteFormaEntregaDao.insert(pacoteFormaEntrega);
+        int ret = pacoteFormaEntregaDao.insert(pacoteFormaEntrega);
+        return ret > 0 ? pacoteFormaEntrega : null;
     }
 
     public List<PacoteFormaEntrega> findByIdPacote(int idPacote) {

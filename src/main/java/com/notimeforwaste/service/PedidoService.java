@@ -40,7 +40,7 @@ public class PedidoService {
     public Pedido save(Pedido pedido) {
         int idPedido = pedidoDao.insert(pedido);
         pedido.setIdPedido(idPedido);
-        return pedido;
+        return idPedido > 0 ?  pedido : null;
     }
 
     public List<Pedido> findAll() {
@@ -73,16 +73,16 @@ public class PedidoService {
         return pedidosResponses;
     }
 
-    public void update(Pedido pedido) {
-        pedidoDao.update(pedido);
+    public int  update(Pedido pedido) {
+        return pedidoDao.update(pedido);
     }
 
     public void updateStatus(String status, int idPedido) {
         pedidoDao.updateStatus(status, idPedido);
     }
 
-    public void delete(int idPedido) {
-        pedidoDao.delete(idPedido);
+    public int  delete(int idPedido) {
+       return pedidoDao.delete(idPedido);
     }
 
     public int existsByIdPacote(int idPacote) {

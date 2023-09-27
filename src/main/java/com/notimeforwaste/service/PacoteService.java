@@ -60,11 +60,23 @@ public class PacoteService {
 
     public Pacote save(Pacote pacote) {
         pacote.setIdPacote(pacoteDao.insert(pacote));
-        return pacote;
+        return pacote.getIdPacote() > 0 ? pacote : null;
     }
 
-    public List<PacoteResponse> findAllWithoutOrders() {
-        List<Pacote> pacotes = pacoteDao.findAllWithoutOrders();
+    public List<PacoteResponse> findAll() {
+        List<Pacote> pacotes = pacoteDao.findAll();
+        List<PacoteResponse> pacotesResponses = new ArrayList<PacoteResponse>();
+        if(pacotes != null){
+            for(int i = 0; i < pacotes.size(); i ++){
+                PacoteResponse pacoteResponse = this.getResponseById(pacotes.get(i).getIdPacote());
+                pacotesResponses.add(pacoteResponse);
+            }
+        }
+        return pacotesResponses;
+    }
+
+      public List<PacoteResponse> findAllByIdEmpresa(int idEmpresa) {
+        List<Pacote> pacotes = pacoteDao.findByIdEmpresa(idEmpresa);
         List<PacoteResponse> pacotesResponses = new ArrayList<PacoteResponse>();
         if(pacotes != null){
             for(int i = 0; i < pacotes.size(); i ++){
@@ -83,8 +95,8 @@ public class PacoteService {
        return pacoteDao.delete(idPacote);
     }
 
-    public void update(Pacote pacote) {
-        pacoteDao.update(pacote);
+    public int update(Pacote pacote) {
+       return pacoteDao.update(pacote);
     }
 
     public PacoteResponse getResponseById(int idPacote) {

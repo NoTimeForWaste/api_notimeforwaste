@@ -63,7 +63,7 @@ public class FotoController {
             java.util.UUID uuid = java.util.UUID.randomUUID();
             String fileName = uuid.toString();
 
-            //Nome do arquivo
+            // Nome do arquivo
             // String fileName = new Date().toString();
             String originalFileName = document.getOriginalFilename();
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
@@ -89,7 +89,8 @@ public class FotoController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getFotoById(@PathVariable(value = "id") int id) {
         Foto foto = fotoService.findById(id);
-        return foto != null ?  ResponseEntity.status(HttpStatus.OK).body(foto) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.") ;
+        return foto != null ? ResponseEntity.status(HttpStatus.OK).body(foto)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
     }
 
     @DeleteMapping("/{id}")
@@ -99,7 +100,8 @@ public class FotoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
         }
         int ret = fotoService.delete(foto.getIdFoto());
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
     @PutMapping("/{id}")
@@ -112,7 +114,8 @@ public class FotoController {
         var foto = new Foto();
         BeanUtils.copyProperties(fotoDTO, foto);
         foto.setIdFoto(fotoOptional.getIdFoto());
-       int ret = fotoService.update(foto);
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar.");
+        int ret = fotoService.update(foto);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar.");
     }
 }

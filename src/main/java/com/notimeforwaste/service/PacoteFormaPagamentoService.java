@@ -22,7 +22,9 @@ public class PacoteFormaPagamentoService {
     }
 
     public PacoteFormaPagamento save(PacoteFormaPagamento pacoteFormaPagamento) {
-        return pacoteFormaPagamentoDao.insert(pacoteFormaPagamento);
+
+       int ret = pacoteFormaPagamentoDao.insert(pacoteFormaPagamento);
+        return ret > 0 ? pacoteFormaPagamento : null;
     }
 
     public List<PacoteFormaPagamento> findByIdPacote(int idPacote) {
@@ -37,7 +39,7 @@ public class PacoteFormaPagamentoService {
         return pacoteFormaPagamentoDao.findByIdPacoteAndIdFormaPagamento(pacoteFormaPagamento);
     }
 
-    public void delete(PacoteFormaPagamento pacoteFormaPagamento) {
-        pacoteFormaPagamentoDao.delete(pacoteFormaPagamento);
+    public int delete(PacoteFormaPagamento pacoteFormaPagamento) {
+       return pacoteFormaPagamentoDao.delete(pacoteFormaPagamento);
     }
 }

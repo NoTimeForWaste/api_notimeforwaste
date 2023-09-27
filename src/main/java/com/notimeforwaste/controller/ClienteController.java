@@ -74,6 +74,15 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<Object> getClienteByEmail(@PathVariable(value = "email") String email) {
+        ClienteResponse cliente = clienteService.findByEmail(email);
+        if (cliente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(cliente);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCliente(@PathVariable(value = "id") int id,
             @RequestBody @Valid ClienteDTO clienteDto) {

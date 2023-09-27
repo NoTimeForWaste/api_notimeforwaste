@@ -27,11 +27,11 @@ public class ProdutoService {
 
     public Produto save(Produto produto) {
         produto.setIdProduto(produtoDao.insert(produto));
-        return produto;
+        return produto.getIdProduto() > 0 ? produto : null;
     }
 
-    public void update(Produto produto) {
-        produtoDao.update(produto);
+    public int update(Produto produto) {
+       return produtoDao.update(produto);
     }
 
     public List<Produto> findAll() {
@@ -42,8 +42,8 @@ public class ProdutoService {
         return produtoDao.findById(idProduto);
     }
 
-    public void delete(int idProduto) {
-        produtoDao.delete(idProduto);
+    public int delete(int idProduto) {
+        return produtoDao.delete(idProduto);
     }
 
     public List<Produto> findByIdPacote(int idPacote) {

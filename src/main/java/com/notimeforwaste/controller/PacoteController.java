@@ -59,7 +59,7 @@ public class PacoteController {
 
     @GetMapping
     public ResponseEntity<Object> findAllWithoutOrders() {
-        List<PacoteResponse> pacotes = pacoteService.findAllWithoutOrders();
+        List<PacoteResponse> pacotes = pacoteService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(pacotes);
     }
 
@@ -70,8 +70,15 @@ public class PacoteController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não encontrado.");
     }
 
+        
+    @GetMapping("/{idEmpresa}")
+    public ResponseEntity<Object> getByIdEmpresa(@PathVariable(value = "idEmpresa") int idEmpresa) {
+        List<PacoteResponse> pacotes = pacoteService.findAllByIdEmpresa(idEmpresa);
+        return ResponseEntity.status(HttpStatus.OK).body(pacotes);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCliente(@PathVariable(value = "id") int id) {
+    public ResponseEntity<Object> deletePacote(@PathVariable(value = "id") int id) {
         Pacote pacote = pacoteService.findById(id);
         if (pacote == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não encontrado.");
@@ -81,7 +88,7 @@ public class PacoteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateCliente(@PathVariable(value = "id") int id,
+    public ResponseEntity<Object> updatePacote(@PathVariable(value = "id") int id,
             @RequestBody @Valid PacoteDTO pacoteDTO) {
         Pacote pacoteOptional = pacoteService.findById(id);
         if (pacoteOptional == null) {
@@ -90,7 +97,7 @@ public class PacoteController {
         var pacote = new Pacote();
         BeanUtils.copyProperties(pacoteDTO, pacote);
         pacote.setIdPacote(pacoteOptional.getIdPacote());
-        pacoteService.update(pacote);
-        return ResponseEntity.status(HttpStatus.OK).body(pacote);
+        int ret = pacoteService.update(pacote);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(pacote) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar.");
     }
 }

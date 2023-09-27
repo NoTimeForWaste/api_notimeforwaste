@@ -42,12 +42,13 @@ public class PacoteFormaPagamentoController {
     public ResponseEntity<Object> save(@RequestBody PacoteFormaPagamento pacoteFormaPagamento) {
 
         if (pacoteService.findById(pacoteFormaPagamento.getIidPacote()) == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Pacote não cadastrado no sistema!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não cadastrado no sistema!");
         }
         if (pagamentoService.findById(pacoteFormaPagamento.getIdFormaPagamento()) == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Forma de Pagamento não cadastrada no sistema!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Forma de Pagamento não cadastrada no sistema!");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(pacoteFormaPagamentoService.save(pacoteFormaPagamento));
+        PacoteFormaPagamento ret  = pacoteFormaPagamentoService.save(pacoteFormaPagamento);
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret):ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.") ;
     }
 
     @GetMapping("/pacote/{id}")
@@ -64,8 +65,8 @@ public class PacoteFormaPagamentoController {
         if (pacoteFormaPagamentoService.findByIdFormaPagamentoAndidPacote(pacoteFormaPagamento) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar.");
         }
-        pacoteFormaPagamentoService.delete(pacoteFormaPagamento);
-        return ResponseEntity.status(HttpStatus.OK).body(pacoteFormaPagamento);
+        int ret = pacoteFormaPagamentoService.delete(pacoteFormaPagamento);
+        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(pacoteFormaPagamento) :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.") ;
     }
 
 }

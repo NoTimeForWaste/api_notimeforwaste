@@ -42,7 +42,7 @@ public class HorarioFuncionamentoService {
         return horarioFuncionamentoDao.findById(id);
     }
 
-    public List<HorarioFuncionamento> findByEmpresaId(int id) {
+    public List<HorarioFuncionamento> findByIdEmpresa(int id) {
         return horarioFuncionamentoDao.findByIdEmpresa(id);
     }
 

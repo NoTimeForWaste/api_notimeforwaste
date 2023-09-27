@@ -26,11 +26,15 @@ public interface PacoteDao {
     int insert(@BindBean Pacote pacote);
 
     @SqlQuery("SELECT * FROM Pacote p WHERE NOT EXISTS (SELECT 1 FROM Pedido ped WHERE ped.idPacote = p.idPacote)")
-    List<Pacote> findAllWithoutOrders();
+    List<Pacote> findAll();
     
+    @SqlQuery("SELECT * FROM Pacote WHERE idEmpresa = :idEmpresa")
+    List<Pacote> findByIdEmpresa(@Bind("idEmpresa") int idEmpresa);
 
+    
     @SqlQuery("SELECT * FROM Pacote WHERE idPacote = :idPacote")
     Pacote findById(@Bind("idPacote") int idPacote);
+
 
     @SqlUpdate("UPDATE Pacote SET nmPacote = :nmPacote, preco = :preco, idFoto = :idFoto WHERE idPacote = :idPacote")
     int update(@BindBean Pacote pacote);
