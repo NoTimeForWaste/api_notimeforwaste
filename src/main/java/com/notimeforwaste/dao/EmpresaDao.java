@@ -29,16 +29,16 @@ public interface EmpresaDao {
         int insert(@BindBean Empresa empresa);
 
         @SqlQuery("select * from Empresa")
-        List<EmpresaResponse> findAll();
+        List<Empresa> findAll();
 
         @SqlQuery("select * from Empresa where idEmpresa = :idEmpresa")
-        EmpresaResponse findById(@Bind("idEmpresa") int idEmpresa);
+        Empresa findById(@Bind("idEmpresa") int idEmpresa);
 
         @SqlQuery("select * from Empresa where email = :email")
-        EmpresaResponse findByEmail(@Bind("email") String email);
+        Empresa findByEmail(@Bind("email") String email);
 
         @SqlQuery("select * from Empresa where email = :email and senha = :senha")
-        EmpresaResponse login(@Bind("email") String email, @Bind("senha") String senha);
+        Empresa login(@Bind("email") String email, @Bind("senha") String senha);
 
         @SqlQuery("select count(*) "
                         + " from Empresa "

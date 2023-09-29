@@ -24,7 +24,7 @@ import com.notimeforwaste.service.PacoteService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/notimeforwaste/pacote/formapagamento")
 public class PacoteFormaPagamentoController {
     private final PacoteFormaPagamentoService pacoteFormaPagamentoService;

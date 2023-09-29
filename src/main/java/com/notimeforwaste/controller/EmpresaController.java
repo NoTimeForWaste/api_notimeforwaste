@@ -73,13 +73,13 @@ public class EmpresaController {
     public ResponseEntity<Object> login(@PathVariable(value = "email") String email,
             @PathVariable(value = "senha") String senha) {
         EmpresaResponse empresa = empresaService.findByEmail(email);
-        if (empresa == null) {
+        if (empresa.getIdEmpresa() <= 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email inválido.");
         }
 
         EmpresaResponse result = empresaService.login(email, senha);
 
-        return result != null ? ResponseEntity.status(HttpStatus.OK).body(result)
+        return result.getIdEmpresa() > 0 ? ResponseEntity.status(HttpStatus.OK).body(result)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Senha inválida!");
     }
 

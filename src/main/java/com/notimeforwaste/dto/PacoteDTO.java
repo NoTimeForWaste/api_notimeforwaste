@@ -37,7 +37,5 @@ public class PacoteDTO {
     @NotNull
     private int idEmpresa;
     @NotNull
-    private int idEndereco;
-    @NotNull
     private int idFoto;
 }

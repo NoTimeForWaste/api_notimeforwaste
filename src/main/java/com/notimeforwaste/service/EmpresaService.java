@@ -8,6 +8,7 @@ import com.notimeforwaste.dao.EmpresaDao;
 import com.notimeforwaste.model.Empresa;
 import com.notimeforwaste.response.EmpresaResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jdbi.v3.core.Jdbi;
 import org.springframework.stereotype.Service;
@@ -43,19 +44,65 @@ public class EmpresaService {
     }
 
     public List<EmpresaResponse> findAll() {
-        return empresaDao.findAll();
+        List<Empresa> empresas = empresaDao.findAll();
+        List<EmpresaResponse> empresasResponses = new ArrayList<EmpresaResponse>();
+        if (empresas != null) {
+
+            for (Empresa empresa : empresas) {
+                EmpresaResponse empmResponse = new EmpresaResponse(empresa.getIdEmpresa(), empresa.getNmEmpresa(),
+                        empresa.getCNPJ(), empresa.getEmail(), empresa.getIdFoto(), empresa.getIdEndereco(),
+                        empresa.getTelefone());
+                empresasResponses.add(empmResponse);
+            }
+        }
+        return empresasResponses;
     }
 
     public EmpresaResponse findById(int id) {
-        return empresaDao.findById(id);
+        Empresa empresa = empresaDao.findById(id);
+        EmpresaResponse empresaResponse = new EmpresaResponse();
+        if (empresa != null) {
+            empresaResponse.setCNPJ(empresa.getCNPJ());
+            empresaResponse.setEmail(empresa.getEmail());
+            empresaResponse.setIdEmpresa(empresa.getIdEmpresa());
+            empresaResponse.setIdEndereco(empresa.getIdEndereco());
+            empresaResponse.setIdFoto(empresa.getIdFoto());
+            empresaResponse.setNmEmpresa(empresa.getNmEmpresa());
+            empresaResponse.setTelefone(empresa.getTelefone());
+        }
+        return empresaResponse;
     }
 
     public EmpresaResponse findByEmail(String email) {
-        return empresaDao.findByEmail(email);
+
+        Empresa empresa = empresaDao.findByEmail(email);
+        EmpresaResponse empresaResponse = new EmpresaResponse();
+        if (empresa != null) {
+            empresaResponse.setCNPJ(empresa.getCNPJ());
+            empresaResponse.setEmail(empresa.getEmail());
+            empresaResponse.setIdEmpresa(empresa.getIdEmpresa());
+            empresaResponse.setIdEndereco(empresa.getIdEndereco());
+            empresaResponse.setIdFoto(empresa.getIdFoto());
+            empresaResponse.setNmEmpresa(empresa.getNmEmpresa());
+            empresaResponse.setTelefone(empresa.getTelefone());
+        }
+        return empresaResponse;
     }
 
     public EmpresaResponse login(String email, String senha) {
-        return empresaDao.login(email, senha);
+        Empresa empresa = empresaDao.login(email, senha);
+        EmpresaResponse empresaResponse = new EmpresaResponse();
+        if (empresa != null) {
+            empresaResponse.setCNPJ(empresa.getCNPJ());
+            empresaResponse.setEmail(empresa.getEmail());
+            empresaResponse.setIdEmpresa(empresa.getIdEmpresa());
+            empresaResponse.setIdEndereco(empresa.getIdEndereco());
+            empresaResponse.setIdFoto(empresa.getIdFoto());
+            empresaResponse.setNmEmpresa(empresa.getNmEmpresa());
+            empresaResponse.setTelefone(empresa.getTelefone());
+        }
+        return empresaResponse;
+
     }
 
     public int delete(int idEmpresa, String email, String senha) {

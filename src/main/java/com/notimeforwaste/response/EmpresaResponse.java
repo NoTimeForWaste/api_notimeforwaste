@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class EmpresaResponse {
     protected int idEmpresa;

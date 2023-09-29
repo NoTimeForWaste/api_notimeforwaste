@@ -18,5 +18,6 @@ public class Produto {
     private String nmProduto;
     private int idPacote;
     private Date dtValidade;
-    private String descricao;
+    private String descricao
+    ;
 }

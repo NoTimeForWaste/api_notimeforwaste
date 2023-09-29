@@ -8,6 +8,7 @@ import com.notimeforwaste.dao.ClienteDao;
 import com.notimeforwaste.model.Cliente;
 import com.notimeforwaste.response.ClienteResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jdbi.v3.core.Jdbi;
 import org.springframework.stereotype.Service;
@@ -34,17 +35,24 @@ public class ClienteService {
     }
 
     public int update(int idCliente, String nmCliente, String senha, String email) {
-        ClienteResponse clienteExistente = clienteDao.findById(idCliente);
+        Cliente clienteExistente = clienteDao.findById(idCliente);
         if (clienteExistente != null) {
             // String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
             return clienteDao.update(idCliente, nmCliente, senha, email);
         } else {
             return -1;
         }
-    } 
+    }
 
     public ClienteResponse login(String email, String senha) {
-        return clienteDao.login(email, senha);
+        Cliente cliente = clienteDao.login(email, senha);
+        ClienteResponse clienteResponse = new ClienteResponse();
+        if (cliente != null) {
+            clienteResponse.setIdCliente(cliente.getIdCliente());
+            clienteResponse.setEmail(cliente.getEmail());
+            clienteResponse.setNmCliente(cliente.getNmCliente());
+        }
+        return clienteResponse;
 
     }
 
@@ -57,15 +65,35 @@ public class ClienteService {
     }
 
     public List<ClienteResponse> findAll() {
-        return clienteDao.findAll();
+        List<Cliente> clientes = clienteDao.findAll();
+        List<ClienteResponse> clientesResponses = new ArrayList<ClienteResponse>();
+
+        for (Cliente cliente : clientes) {
+            ClienteResponse clienteResponse = new ClienteResponse();
+            clienteResponse.setIdCliente(cliente.getIdCliente());
+            clienteResponse.setEmail(cliente.getEmail());
+            clienteResponse.setNmCliente(cliente.getNmCliente());
+            clientesResponses.add(clienteResponse);
+        }
+
+        return clientesResponses;
     }
 
     public ClienteResponse findById(int idCliente) {
-        return clienteDao.findById(idCliente);
+        ClienteResponse cliente = new ClienteResponse();
+        return cliente;
     }
 
     public ClienteResponse findByEmail(String email) {
-        return clienteDao.findByEmail(email);
+        Cliente cliente = clienteDao.findByEmail(email);
+        ClienteResponse clienteResponse = new ClienteResponse();
+        if (cliente != null) {
+            clienteResponse.setIdCliente(cliente.getIdCliente());
+            clienteResponse.setEmail(cliente.getEmail());
+            clienteResponse.setNmCliente(cliente.getNmCliente());
+        }
+        return clienteResponse;
+
     }
 
     public int delete(int idCliente, String senha, String email) {

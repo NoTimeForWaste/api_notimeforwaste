@@ -36,5 +36,5 @@ public class ProdutoDTO {
     @NotNull
     private Date dtValidade;
     @Size(max=200)
-    private String descicao;
+    private String descricao;
 }

@@ -44,11 +44,11 @@ import org.springframework.web.multipart.MultipartFile;
  * @author Arthur
  */
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/notimeforwaste/foto")
 public class FotoController {
 
-    private static final String uploadDirectory = "C:/fotos";
+    private static final String uploadDirectory = "C:\\fotos";
     private final FotoService fotoService;
 
     public FotoController(FotoService fotoService) {
@@ -59,29 +59,22 @@ public class FotoController {
     public ResponseEntity<Object> saveEmployee(@RequestPart MultipartFile document) {
         try {
 
-            // Gere um nome de arquivo único com UUID
             java.util.UUID uuid = java.util.UUID.randomUUID();
             String fileName = uuid.toString();
 
-            // Nome do arquivo
-            // String fileName = new Date().toString();
             String originalFileName = document.getOriginalFilename();
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-            // Construa o caminho completo para o arquivo
             java.nio.file.Path filePath = Paths.get(uploadDirectory, fileName);
 
-            // Salve o arquivo no diretório
             File file = new File(uploadDirectory, fileName + fileExtension);
             document.transferTo(file);
 
-            // Salve apenas o caminho no banco de dados...
-            String imageUrl = uploadDirectory + "/" + fileName + fileExtension;
+            String imageUrl = uploadDirectory + "\\" + fileName + fileExtension;
             Foto foto = new Foto();
-            foto.setFotoUrl(imageUrl); // Salvar o URL no objeto Foto
+            foto.setFotoUrl(imageUrl);
             return ResponseEntity.status(HttpStatus.OK).body(fotoService.save(foto));
         } catch (IOException e) {
-            // Tratar exceção de leitura de arquivo
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar o arquivo.");
         }
     }
@@ -106,16 +99,31 @@ public class FotoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateFoto(@PathVariable(value = "id") int id,
-            @RequestBody @Valid FotoDTO fotoDTO) {
-        Foto fotoOptional = fotoService.findById(id);
-        if (fotoOptional == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
+            @RequestPart MultipartFile newDocument) {
+        try {
+            Foto existingFoto = fotoService.findById(id);
+            if (existingFoto == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Foto não encontrada.");
+            }
+
+            String existingImageUrl = existingFoto.getFotoUrl();
+
+            File existingFile = new File(existingImageUrl);
+            if (!existingFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Arquivo de foto existente não encontrado.");
+            }
+
+            if (!existingFile.delete()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Erro ao excluir o arquivo de foto existente.");
+            }
+
+            newDocument.transferTo(existingFile);
+
+            return ResponseEntity.status(HttpStatus.OK).body("Foto atualizada com sucesso.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar o arquivo.");
         }
-        var foto = new Foto();
-        BeanUtils.copyProperties(fotoDTO, foto);
-        foto.setIdFoto(fotoOptional.getIdFoto());
-        int ret = fotoService.update(foto);
-        return ret > 0 ? ResponseEntity.status(HttpStatus.OK).body(foto)
-                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar.");
     }
+
 }

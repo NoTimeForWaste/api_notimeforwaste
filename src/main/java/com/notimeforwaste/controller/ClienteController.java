@@ -55,13 +55,13 @@ public class ClienteController {
     public ResponseEntity<Object> login(@PathVariable(value = "email") String email,
             @PathVariable(value = "senha") String senha) {
         ClienteResponse cliente = clienteService.findByEmail(email);
-        if (cliente == null) {
+        if (cliente.getIdCliente() <= 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email inválido.");
         }
 
         ClienteResponse result = clienteService.login(email, senha);
 
-        return result != null ? ResponseEntity.status(HttpStatus.OK).body(result)
+        return result.getIdCliente() > 0 ? ResponseEntity.status(HttpStatus.OK).body(result)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Senha inválida!");
     }
 
