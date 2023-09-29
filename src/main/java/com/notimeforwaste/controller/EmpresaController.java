@@ -79,7 +79,7 @@ public class EmpresaController {
 
         EmpresaResponse result = empresaService.login(email, senha);
 
-        return result != null ? ResponseEntity.status(HttpStatus.OK).body(result)
+        return result.getIdEmpresa() > 0 ? ResponseEntity.status(HttpStatus.OK).body(result)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Senha inválida!");
     }
 

@@ -29,13 +29,13 @@ public interface ClienteDao {
         int insert(@BindBean Cliente cliente);
 
         @SqlQuery("select * from Cliente")
-        List<ClienteResponse> findAll();
+        List<Cliente> findAll();
 
         @SqlQuery("select * from Cliente where idCliente = :idCliente")
-        ClienteResponse findById(@Bind("idCliente") int idCliente);
+        Cliente findById(@Bind("idCliente") int idCliente);
 
         @SqlQuery("select * from Cliente where email = :email")
-        ClienteResponse findByEmail(@Bind("email") String email);
+        Cliente findByEmail(@Bind("email") String email);
 
         @SqlQuery("select count(*) "
                         + " from Cliente "
@@ -49,7 +49,7 @@ public interface ClienteDao {
 
         @SqlQuery("select * from Cliente "
                         + " where email = :email and senha = :senha;")
-        ClienteResponse login(@Bind("email") String email, @Bind("senha") String senha);
+        Cliente login(@Bind("email") String email, @Bind("senha") String senha);
 
         @SqlUpdate("update Cliente "
                         + " set nmCliente = :nmCliente, "
