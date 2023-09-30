@@ -48,7 +48,8 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Esse e-mail já foi cadastrado!");
         }
         Cliente ret = clienteService.save(cliente);
-        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao") ;
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret)
+                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao");
     }
 
     @GetMapping("login/{email}/{senha}")
@@ -62,6 +63,7 @@ public class ClienteController {
         ClienteResponse result = clienteService.login(email, senha);
 
         return result.getIdCliente() > 0 ? ResponseEntity.status(HttpStatus.OK).body(result)
+
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Senha inválida!");
     }
 

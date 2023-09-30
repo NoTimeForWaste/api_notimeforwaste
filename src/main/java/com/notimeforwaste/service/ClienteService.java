@@ -7,6 +7,7 @@ package com.notimeforwaste.service;
 import com.notimeforwaste.dao.ClienteDao;
 import com.notimeforwaste.model.Cliente;
 import com.notimeforwaste.response.ClienteResponse;
+import java.util.ArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,8 @@ public class ClienteService {
     }
 
     public int update(int idCliente, String nmCliente, String senha, String email) {
-        Cliente clienteExistente = clienteDao.findById(idCliente);
-        if (clienteExistente != null) {
+        Cliente cliente = clienteDao.findById(idCliente);
+        if (cliente != null) {
             // String senhaCriptografada = BCrypt.hashpw(senha, BCrypt.gensalt());
             return clienteDao.update(idCliente, nmCliente, senha, email);
         } else {
@@ -80,8 +81,15 @@ public class ClienteService {
     }
 
     public ClienteResponse findById(int idCliente) {
-        ClienteResponse cliente = new ClienteResponse();
-        return cliente;
+        Cliente cliente = clienteDao.findById(idCliente);
+        ;
+        ClienteResponse clienteResponse = new ClienteResponse();
+        if (cliente != null) {
+            clienteResponse.setEmail(cliente.getEmail());
+            clienteResponse.setNmCliente(cliente.getNmCliente());
+            clienteResponse.setIdCliente(cliente.getIdCliente());
+        }
+        return clienteResponse;
     }
 
     public ClienteResponse findByEmail(String email) {
