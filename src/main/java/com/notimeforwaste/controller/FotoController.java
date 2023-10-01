@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,9 +82,9 @@ public class FotoController {
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Object> updateFoto(@PathVariable(value = "id") int id,
-            @RequestPart MultipartFile newDocument) {
+            @RequestParam MultipartFile newDocument) {
         try {
             Foto existingFoto = fotoService.findById(id);
             if (existingFoto == null) {

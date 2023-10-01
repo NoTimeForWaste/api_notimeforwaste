@@ -18,6 +18,6 @@ import lombok.experimental.SuperBuilder;
 
 public class PacoteFormaPagamento {
 
-    protected int iidPacote;
+    protected int idPacote;
     protected int idFormaPagamento;
 }

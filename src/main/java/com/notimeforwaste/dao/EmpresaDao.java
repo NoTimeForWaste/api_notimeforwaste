@@ -52,7 +52,6 @@ public interface EmpresaDao {
 
         @SqlUpdate("update Empresa "
                         + " set nmEmpresa = :nmEmpresa, "
-                        + "     senha = :senha, "
                         + "     telefone = :telefone "
                         + " where idEmpresa = :idEmpresa;")
         int update(@BindBean Empresa empresa);

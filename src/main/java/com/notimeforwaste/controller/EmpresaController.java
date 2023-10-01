@@ -47,7 +47,7 @@ public class EmpresaController {
         var empresa = new Empresa();
         BeanUtils.copyProperties(empresaDto, empresa);
         Empresa ret = empresaService.save(empresa);
-        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(empresaService.save(empresa))
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar.");
     }
 
@@ -95,15 +95,20 @@ public class EmpresaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateEmpresa(@PathVariable(value = "id") int id,
-            @RequestBody @Valid EmpresaDTO empresaDto) {
+            @RequestBody  EmpresaResponse empresa) {
         EmpresaResponse empresaResponse = empresaService.findById(id);
         if (empresaResponse == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada.");
         }
-        var empresa = new Empresa();
-        BeanUtils.copyProperties(empresaDto, empresa);
-        empresa.setIdEmpresa(empresaResponse.getIdEmpresa());
-        int result = empresaService.update(empresa);
+        var resp = new Empresa();
+        resp.setCNPJ(empresa.getCNPJ());
+        resp.setEmail(empresa.getEmail());
+        resp.setIdEmpresa(id);
+        resp.setIdEndereco(empresa.getIdEndereco());
+        resp.setIdFoto(empresa.getIdFoto());
+        resp.setNmEmpresa(empresa.getNmEmpresa());
+        resp.setTelefone(empresa.getTelefone());
+        int result = empresaService.update(resp);
         return result > 0 ? ResponseEntity.status(HttpStatus.OK).body(empresa)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao alterar dados da empresa!");
     }

@@ -21,7 +21,7 @@ import com.notimeforwaste.service.PacoteService;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/notimeforwaste/pacote/formaentrega")
+@RequestMapping("/api/notimeforwaste/pacote/formaentrega/bypacote")
 public class PacoteFormaEntregaController {
     private final PacoteFormaEntregaService pacoteFormaEntregaService;
     private final PacoteService pacoteService;

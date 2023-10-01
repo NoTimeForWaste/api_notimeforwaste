@@ -92,17 +92,34 @@ public class PacoteService {
     }
 
     public int delete(int idPacote) {
-        Pacote pacote = pacoteDao.findById(idPacote);
-        if (pacote == null) {
+        try {
+            Pacote pacote = pacoteDao.findById(idPacote);
+            if (pacote == null) {
+                return -1;
+            }
+
+            List<Produto> produtos = produtoService.findByIdPacote(idPacote);
+            for (Produto produto : produtos) {
+                produtoService.delete(produto.getIdProduto());
+            }
+
+            List<PacoteFormaEntrega> pacoteFormaEntregas = pacoteFormaEntregaService.findByIdPacote(idPacote);
+            for (PacoteFormaEntrega formaEntrega : pacoteFormaEntregas) {
+                pacoteFormaEntregaService.delete(formaEntrega);
+            }
+
+            List<PacoteFormaPagamento> pacoteFormaPagamentos = pacoteFormaPagamentoService.findByIdPacote(idPacote);
+            for (PacoteFormaPagamento formaPagamento : pacoteFormaPagamentos) {
+                pacoteFormaPagamentoService.delete(formaPagamento);
+            }
+
+            pacoteDao.delete(idPacote);
+            fotoService.delete(pacote.getIdFoto());
+            return 1;
+        } catch (Exception e) {
+
             return -1;
         }
-        List<Produto> produtos = produtoService.findByIdPacote(idPacote);
-        for (Produto produto : produtos) {
-            produtoService.delete(produto.getIdProduto());
-        }
-        
-        fotoService.delete(pacote.getIdFoto());
-        return pacoteDao.delete(idPacote);
     }
 
     public int update(Pacote pacote) {

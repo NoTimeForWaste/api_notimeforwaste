@@ -13,7 +13,7 @@ import com.notimeforwaste.model.PacoteFormaPagamento;
 
 @RegisterBeanMapper(PacoteFormaPagamento.class)
 public interface PacoteFormaPagamentoDao {
-    @GetGeneratedKeys
+    
     @SqlUpdate("INSERT INTO Pacote_FormaPagamento (idPacote, idFormaPagamento) VALUES (:idPacote, :idFormaPagamento)")
     int insert(@BindBean PacoteFormaPagamento pacoteFormaPagamento);
 

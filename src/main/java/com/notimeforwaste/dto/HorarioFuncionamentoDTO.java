@@ -30,9 +30,9 @@ public class HorarioFuncionamentoDTO {
     @Size(max=45)
     private String nome;
     @NotNull
-    private Time horarioInicial;
+    private String horarioInicial;
     @NotNull
-    private Time horarioFinal;
+    private String horarioFinal;
     @NotNull
     private int idEmpresa;
 }

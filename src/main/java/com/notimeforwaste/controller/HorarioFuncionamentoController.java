@@ -9,6 +9,9 @@ import com.notimeforwaste.model.HorarioFuncionamento;
 import com.notimeforwaste.service.EmpresaService;
 import com.notimeforwaste.service.HorarioFuncionamentoService;
 import jakarta.validation.Valid;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -44,7 +47,23 @@ public class HorarioFuncionamentoController {
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody @Valid HorarioFuncionamentoDTO horarioDTO) {
         var horarioFuncionamento = new HorarioFuncionamento();
-        BeanUtils.copyProperties(horarioDTO, horarioFuncionamento);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        java.util.Date dInicial = null;
+        java.util.Date dFinal = null;
+        try {
+            dInicial = format.parse(horarioDTO.getHorarioInicial());
+            dFinal = format.parse(horarioDTO.getHorarioFinal());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        java.sql.Time sqlTimeInicial = new java.sql.Time(dInicial.getTime());
+        java.sql.Time sqlTimeFinal = new java.sql.Time(dFinal.getTime());
+
+        // Defina os horários no modelo antes de copiar as propriedades
+        horarioFuncionamento.setHorarioInicial(sqlTimeInicial);
+        horarioFuncionamento.setHorarioFinal(sqlTimeFinal);
+
+        BeanUtils.copyProperties(horarioDTO, horarioFuncionamento, "horarioInicial", "horarioFinal"); 
         if (empresaService.findById(horarioFuncionamento.getIdEmpresa()) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada.");
         }

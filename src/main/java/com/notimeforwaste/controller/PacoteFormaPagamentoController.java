@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/notimeforwaste/pacote/formapagamento")
+@RequestMapping("/api/notimeforwaste/pacote/formapagamento/bypacote")
 public class PacoteFormaPagamentoController {
     private final PacoteFormaPagamentoService pacoteFormaPagamentoService;
     private final PacoteService pacoteService;
@@ -36,12 +36,12 @@ public class PacoteFormaPagamentoController {
         this.pacoteFormaPagamentoService = pacoteFormaPagamentoService;
         this.pacoteService = pacoteService;
         this.pagamentoService = formaPagamentoService;
-    }
+    } 
 
     @PostMapping({ "", "/" })
     public ResponseEntity<Object> save(@RequestBody PacoteFormaPagamento pacoteFormaPagamento) {
 
-        if (pacoteService.findById(pacoteFormaPagamento.getIidPacote()) == null) {
+        if (pacoteService.findById(pacoteFormaPagamento.getIdPacote()) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pacote não cadastrado no sistema!");
         }
         if (pagamentoService.findById(pacoteFormaPagamento.getIdFormaPagamento()) == null) {
