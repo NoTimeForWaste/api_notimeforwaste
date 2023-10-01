@@ -41,7 +41,7 @@ public class EnderecoController {
         var endereco = new Endereco();
         BeanUtils.copyProperties(enderecoDTO, endereco);
         Endereco ret = enderecoService.save(endereco);
-        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(enderecoService.save(endereco)) :  ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(enderecoService.save(endereco)) :  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar.");
     }
 
     @GetMapping("/{id}")

@@ -18,7 +18,7 @@ USE notimeforwaste;
 -- Table Cliente
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Cliente (
-  idCliente INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  idCliente INT NOT NULL AUTO_INCREMENT,
   nmCliente VARCHAR(100) NOT NULL,
   email VARCHAR(70) NOT NULL,
   senha VARCHAR(15) NOT NULL,
@@ -32,7 +32,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Foto (
   idFotos INT NOT NULL AUTO_INCREMENT,
-  foto BLOB NOT NULL,
+  fotoUrl BLOB NOT NULL,
   PRIMARY KEY (idFotos),
   UNIQUE INDEX idFotos_UNIQUE (idFotos ASC))
 ENGINE = InnoDB;
@@ -42,7 +42,7 @@ ENGINE = InnoDB;
 -- Table Endereco
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Endereco (
-  idEndereco INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  idEndereco INT NOT NULL AUTO_INCREMENT,
   rua VARCHAR(100) NOT NULL,
   bairro VARCHAR(100) NOT NULL,
   cidade VARCHAR(100) NOT NULL,
@@ -60,10 +60,12 @@ ENGINE = InnoDB;
 -- Table Empresa
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Empresa (
-  idEmpresa INT ZEROFILL NOT NULL AUTO_INCREMENT,
+  idEmpresa INT NOT NULL AUTO_INCREMENT,
   nmEmpresa VARCHAR(100) NOT NULL,
   CNPJ VARCHAR(14) NOT NULL,
   senha VARCHAR(15) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  telefone VARCHAR(18) NOT NULL,
   idFoto INT NOT NULL,
   idEndereco INT UNSIGNED NOT NULL,
   PRIMARY KEY (idEmpresa),
@@ -88,7 +90,7 @@ ENGINE = InnoDB;
 -- Table FormaPagamento
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS FormaPagamento (
-  idFormaPagamento INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  idFormaPagamento INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(60) NULL,
   PRIMARY KEY (idFormaPagamento))
 ENGINE = InnoDB;
@@ -98,7 +100,7 @@ ENGINE = InnoDB;
 -- Table FormaEntrega
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS FormaEntrega (
-  idFormaEntrega INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  idFormaEntrega INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(45) NULL,
   PRIMARY KEY (idFormaEntrega))
 ENGINE = InnoDB;
@@ -108,11 +110,11 @@ ENGINE = InnoDB;
 -- Table Pedido
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Pedido (
-  idPedido INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  idCliente INT UNSIGNED NOT NULL,
+  idPedido INT NOT NULL AUTO_INCREMENT,
+  idCliente INT NOT NULL,
   status VARCHAR(15) NOT NULL,
-  idFormaPagamento INT UNSIGNED NOT NULL,
-  idFormaEntrega INT UNSIGNED NOT NULL,
+  idFormaPagamento INT NOT NULL,
+  idFormaEntrega INT NOT NULL,
   frete DOUBLE NOT NULL,
   cancelado BIT NULL,
   PRIMARY KEY (idPedido),
@@ -145,9 +147,9 @@ CREATE TABLE IF NOT EXISTS Pacote (
   idPacote INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(100) NOT NULL,
   preco FLOAT NOT NULL,
-  idEmpresa INT ZEROFILL NOT NULL,
+  idEmpresa INT NOT NULL,
   idFotos INT NOT NULL,
-  idPedido INT UNSIGNED NOT NULL,
+  idPedido INT NOT NULL,
   PRIMARY KEY (idPacote),
   UNIQUE INDEX idPacote_UNIQUE (idPacote ASC),
   INDEX fk_Pacote_Empresa1_idx (idEmpresa ASC),
@@ -196,8 +198,8 @@ ENGINE = InnoDB;
 -- Table Cliente_Endereco
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Cliente_Endereco (
-  iidCliente INT UNSIGNED NOT NULL,
-  idEndereco INT UNSIGNED NOT NULL,
+  iidCliente INT NOT NULL,
+  idEndereco INT NOT NULL,
   PRIMARY KEY (iidCliente, idEndereco),
   INDEX fk_Cliente_has_Endereco_Endereco1_idx (idEndereco ASC),
   INDEX fk_Cliente_has_Endereco_Cliente1_idx (iidCliente ASC),
@@ -223,7 +225,7 @@ CREATE TABLE IF NOT EXISTS HorarioFuncionamento (
   nome VARCHAR(45) NOT NULL,
   horarioInicial TIME NOT NULL,
   horarioFinal TIME NOT NULL,
-  idEmpresa INT ZEROFILL NOT NULL,
+  idEmpresa INT NOT NULL,
   PRIMARY KEY (idHorario),
   INDEX fk_HorarioFuncionamento_Empresa1_idx (idEmpresa ASC),
   CONSTRAINT fk_HorarioFuncionamento_Empresa1
@@ -242,8 +244,8 @@ CREATE TABLE IF NOT EXISTS Avaliacao (
   idAvaliacao INT NOT NULL AUTO_INCREMENT,
   comentario VARCHAR(500) NULL,
   nota INT NOT NULL,
-  idEmpresa INT ZEROFILL NOT NULL,
-  idCliente INT UNSIGNED NOT NULL,
+  idEmpresa INT NOT NULL,
+  idCliente INT NOT NULL,
   dtAvaliacao DATETIME NOT NULL,
   PRIMARY KEY (idAvaliacao),
   UNIQUE INDEX idAvaliacao_UNIQUE (idAvaliacao ASC),
@@ -268,7 +270,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Pacote_FormaPagamento (
   iidPacote INT NOT NULL,
-  idFormaPagamento INT UNSIGNED NOT NULL,
+  idFormaPagamento INT NOT NULL,
   PRIMARY KEY (iidPacote, idFormaPagamento),
   INDEX fk_Pacote_FormaPagamento_FormaPagamento1_idx (idFormaPagamento ASC),
   INDEX fk_Pacote_FormaPagamento_Pacote1_idx (iidPacote ASC),
@@ -291,7 +293,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Pacote_FormaEntrega (
   Pacote_idPacote INT NOT NULL,
-  FormaEntrega_idFormaEntrega INT UNSIGNED NOT NULL,
+  FormaEntrega_idFormaEntrega INT NOT NULL,
   PRIMARY KEY (Pacote_idPacote, FormaEntrega_idFormaEntrega),
   INDEX fk_Pacote_FormaEntrega_FormaEntrega1_idx (FormaEntrega_idFormaEntrega ASC),
   INDEX fk_Pacote_FormaEntrega_Pacote1_idx (Pacote_idPacote ASC),

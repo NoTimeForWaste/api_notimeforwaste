@@ -83,7 +83,8 @@ public class PedidoController {
                 if (foraPagamentoService.existsById(pedido.getIdFormaPagamento()) <= 0) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("Forma de pagamento inválida.");
                 }
-                return ResponseEntity.status(HttpStatus.CREATED).body(pacoteService.save(pacote));
+                Pedido res = pedidoService.save(pedido);
+                return res != null ?  ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.save(res)) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar pedido!");
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body("Lamentamos, mas esse pacote não está mais disponível para compra.");
@@ -103,8 +104,8 @@ public class PedidoController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("O status do pedido não pode ser vzio!");
             }
 
-            pedidoService.updateStatus(status, id);
-            return ResponseEntity.status(HttpStatus.OK).body(status);
+            int res = pedidoService.updateStatus(status, id);
+            return res > 0 ? ResponseEntity.status(HttpStatus.OK).body(status) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao atualizzar status");
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Pedido não encontrado!");
 

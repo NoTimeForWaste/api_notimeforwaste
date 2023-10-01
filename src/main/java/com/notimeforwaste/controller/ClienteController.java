@@ -76,6 +76,10 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
+    @GetMapping("existsbyemail/{email}")
+    public ResponseEntity<Object> existsByEmail(@PathVariable(value = "email") String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(clienteService.existsByEmail(email));
+    }
     @GetMapping("/{email}")
     public ResponseEntity<Object> getClienteByEmail(@PathVariable(value = "email") String email) {
         ClienteResponse cliente = clienteService.findByEmail(email);

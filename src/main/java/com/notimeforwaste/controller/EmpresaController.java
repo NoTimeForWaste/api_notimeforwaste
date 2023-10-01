@@ -48,7 +48,7 @@ public class EmpresaController {
         BeanUtils.copyProperties(empresaDto, empresa);
         Empresa ret = empresaService.save(empresa);
         return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(empresaService.save(empresa))
-                : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar.");
     }
 
     @GetMapping("/{id}")
@@ -58,6 +58,16 @@ public class EmpresaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(empresa);
+    }
+
+    @GetMapping("existsbycnpj/{cnpj}")
+    public ResponseEntity<Object> existsByCNPJ(@PathVariable(value = "cnpj") String cnpj) {
+        return ResponseEntity.status(HttpStatus.OK).body(empresaService.existsByCNPJ(cnpj));
+    }
+
+    @GetMapping("existsbyemail/{email}")
+    public ResponseEntity<Object> existsByEmail(@PathVariable(value = "email") String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(empresaService.existsByEmail(email));
     }
 
     @GetMapping("/{email}")

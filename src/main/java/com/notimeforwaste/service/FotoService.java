@@ -28,7 +28,7 @@ public class FotoService {
 
     public Foto save(Foto foto) {
         foto.setIdFoto(fotoDao.insert(foto));
-        return foto;
+        return foto.getIdFoto() > 0 ? foto : null;
     }
 
     public List<Foto> findAll() {

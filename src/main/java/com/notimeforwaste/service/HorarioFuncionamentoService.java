@@ -22,12 +22,13 @@ public class HorarioFuncionamentoService {
     private final HorarioFuncionamentoDao horarioFuncionamentoDao;
 
     public HorarioFuncionamentoService(Jdbi jdbi) {
+    
         this.horarioFuncionamentoDao = jdbi.onDemand(HorarioFuncionamentoDao.class);
     }
 
     public HorarioFuncionamento save(HorarioFuncionamento horario) {
         horario.setIdHorario(horarioFuncionamentoDao.insert(horario));
-        return horario;
+        return horario.getIdHorario() > 0 ? horario : null;
     }
 
     public int update(HorarioFuncionamento horario) {

@@ -3,36 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.notimeforwaste.controller;
-
-import com.google.common.io.Files;
-import com.notimeforwaste.dto.ClienteDTO;
-import com.notimeforwaste.dto.FotoDTO;
-import com.notimeforwaste.model.Cliente;
-import com.notimeforwaste.model.Employee;
 import com.notimeforwaste.model.Foto;
 import com.notimeforwaste.service.FotoService;
-import jakarta.validation.Path;
-import jakarta.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import lombok.Value;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -56,7 +39,7 @@ public class FotoController {
     }
 
     @RequestMapping(path = "", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<Object> saveEmployee(@RequestPart MultipartFile document) {
+    public ResponseEntity<Object> postFoto(@RequestPart MultipartFile document) {
         try {
 
             java.util.UUID uuid = java.util.UUID.randomUUID();
@@ -119,8 +102,7 @@ public class FotoController {
             }
 
             newDocument.transferTo(existingFile);
-
-            return ResponseEntity.status(HttpStatus.OK).body("Foto atualizada com sucesso.");
+            return ResponseEntity.status(HttpStatus.OK).body(existingFoto);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar o arquivo.");
         }

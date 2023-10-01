@@ -65,7 +65,7 @@ public class HorarioFuncionamentoController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Horário não encontrado");
     }
 
-    @GetMapping("/empresa/{id}")
+    @GetMapping("/{id}/byempresa")
     public ResponseEntity<Object> findByEmpresaId(@PathVariable("id") int id) {
         List<HorarioFuncionamento> horariosList = horarioFuncionamentoService.findByIdEmpresa(id);
         return horariosList != null ? ResponseEntity.status(HttpStatus.OK).body(horariosList)

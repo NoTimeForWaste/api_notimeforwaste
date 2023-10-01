@@ -82,7 +82,6 @@ public class ClienteService {
 
     public ClienteResponse findById(int idCliente) {
         Cliente cliente = clienteDao.findById(idCliente);
-        ;
         ClienteResponse clienteResponse = new ClienteResponse();
         if (cliente != null) {
             clienteResponse.setEmail(cliente.getEmail());

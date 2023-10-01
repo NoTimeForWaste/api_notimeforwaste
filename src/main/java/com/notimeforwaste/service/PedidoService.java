@@ -77,8 +77,8 @@ public class PedidoService {
         return pedidoDao.update(pedido);
     }
 
-    public void updateStatus(String status, int idPedido) {
-        pedidoDao.updateStatus(status, idPedido);
+    public int updateStatus(String status, int idPedido) {
+        return pedidoDao.updateStatus(status, idPedido);
     }
 
     public int  delete(int idPedido) {
@@ -91,6 +91,9 @@ public class PedidoService {
 
     public PedidoResponse findResponseByIdPedido(int idPedido) {
         Pedido pedido = findById(idPedido);
+        if(pedido ==  null){
+            return null;
+        }
         Endereco endereco = enderecoService.findById(pedido.getIdEndereco());
         String nmCliente = clienteService.findById(pedido.getIdCliente()).getNmCliente();
         PacoteResponse pacoteResponse = pacoteService.getResponseById(pedido.getIdPacote());

@@ -60,30 +60,30 @@ public class PacoteService {
 
     public Pacote save(Pacote pacote) {
         pacote.setIdPacote(pacoteDao.insert(pacote));
-        System.out.println("Aqui:"+pacote);
+        System.out.println("Aqui:" + pacote);
         return pacote.getIdPacote() > 0 ? pacote : null;
     }
 
     public List<PacoteResponse> findAll() {
         List<Pacote> pacotes = pacoteDao.findAll();
         List<PacoteResponse> pacotesResponses = new ArrayList<PacoteResponse>();
-            for(int i = 0; i < pacotes.size(); i ++){
-                PacoteResponse pacoteResponse = this.getResponseById(pacotes.get(i).getIdPacote());
-                pacotesResponses.add(pacoteResponse);
-            }
-        
+        for (int i = 0; i < pacotes.size(); i++) {
+            PacoteResponse pacoteResponse = this.getResponseById(pacotes.get(i).getIdPacote());
+            pacotesResponses.add(pacoteResponse);
+        }
+
         return pacotesResponses;
     }
 
-      public List<PacoteResponse> findAllByIdEmpresa(int idEmpresa) {
-        System.out.println("fyugchdkxmlsç,"+idEmpresa);
+    public List<PacoteResponse> findAllByIdEmpresa(int idEmpresa) {
+        System.out.println("fyugchdkxmlsç," + idEmpresa);
         List<Pacote> pacotes = pacoteDao.findByIdEmpresa(idEmpresa);
         List<PacoteResponse> pacotesResponses = new ArrayList<PacoteResponse>();
-            for(int i = 0; i < pacotes.size(); i ++){
-                PacoteResponse pacoteResponse = this.getResponseById(pacotes.get(i).getIdPacote());
-                pacotesResponses.add(pacoteResponse);
-            }
-        
+        for (int i = 0; i < pacotes.size(); i++) {
+            PacoteResponse pacoteResponse = this.getResponseById(pacotes.get(i).getIdPacote());
+            pacotesResponses.add(pacoteResponse);
+        }
+
         return pacotesResponses;
     }
 
@@ -92,11 +92,21 @@ public class PacoteService {
     }
 
     public int delete(int idPacote) {
-       return pacoteDao.delete(idPacote);
+        Pacote pacote = pacoteDao.findById(idPacote);
+        if (pacote == null) {
+            return -1;
+        }
+        List<Produto> produtos = produtoService.findByIdPacote(idPacote);
+        for (Produto produto : produtos) {
+            produtoService.delete(produto.getIdProduto());
+        }
+        
+        fotoService.delete(pacote.getIdFoto());
+        return pacoteDao.delete(idPacote);
     }
 
     public int update(Pacote pacote) {
-       return pacoteDao.update(pacote);
+        return pacoteDao.update(pacote);
     }
 
     public PacoteResponse getResponseById(int idPacote) {
