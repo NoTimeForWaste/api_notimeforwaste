@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Arthur
  */
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/notimeforwaste/empresa/horariofuncionamento")
 public class HorarioFuncionamentoController {
 

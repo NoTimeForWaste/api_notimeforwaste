@@ -11,6 +11,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.web.cors.CorsConfiguration;
+
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.sql.DataSource;
 
@@ -32,5 +39,19 @@ public class JdbiConfig {
         return Jdbi.create(dataSource)
                 .installPlugin(new SqlObjectPlugin())
                 .setSqlLogger(new Slf4JSqlLogger());
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList("*")); 
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowCredentials(true); // Permitir credenciais (cookies)
+        configuration.addAllowedHeader("Origin, X-Requested-With, Content-Type, Accept"); // Permitir cabeçalhos específicos
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplicar a configuração a todas as rotas
+
+        return source;
     }
 }
