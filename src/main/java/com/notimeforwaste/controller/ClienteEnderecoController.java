@@ -40,21 +40,19 @@ public class ClienteEnderecoController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> findByIdCliente(@PathVariable("id") int id) {
         List<Cliente_Endereco> ret = clienteEnderecoService.findByIdCliente(id);
-        return ret != null ? ResponseEntity.status(HttpStatus.OK).body(ret)
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
+        return ResponseEntity.status(HttpStatus.OK).body(ret);
     }
 
     @GetMapping("{idCliente}/enderecosbycliente")
     public ResponseEntity<Object> findEnderecosByIdCliente(@PathVariable("idCliente") int idCliente) {
         List<Endereco> ret = clienteEnderecoService.findEnderecosByIdCliente(idCliente);
-        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret)
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente sem endereços cadastrados.");
+        return ResponseEntity.status(HttpStatus.OK).body(ret);
     }
 
     @PostMapping({ "", "/" })
     public ResponseEntity<Object> save(@RequestBody Cliente_Endereco clienteEndereco) {
         Cliente_Endereco ret = clienteEnderecoService.save(clienteEndereco);
-        return ret.getIdCliente() > 0 ? ResponseEntity.status(HttpStatus.OK).body(ret)
+        return ret != null ? ResponseEntity.status(HttpStatus.CREATED).body(ret)
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar.");
     }
 

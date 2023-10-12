@@ -29,9 +29,9 @@ public class ClienteEnderecoService {
     }
 
     public Cliente_Endereco save(Cliente_Endereco clienteEndereco) {
-       int id = clienteEnderecoDao.insert(clienteEndereco.getIdEndereco(),
+       int ret = clienteEnderecoDao.insert(clienteEndereco.getIdEndereco(),
                 clienteEndereco.getIdCliente());
-        return clienteEndereco;
+        return ret > 0 ? clienteEndereco : null;
     }
 
     public List<Cliente_Endereco> findByIdCliente(int id) {

@@ -20,7 +20,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 @RegisterBeanMapper(Cliente_Endereco.class)
 public interface ClienteEnderecoDao {
 
-    @GetGeneratedKeys
     @SqlUpdate("INSERT INTO Cliente_Endereco (idEndereco, idCliente) VALUES (:idEndereco, :idCliente)")
     int insert(@Bind("idEndereco") int idEndereco, @Bind("idCliente") int idCliente);
 

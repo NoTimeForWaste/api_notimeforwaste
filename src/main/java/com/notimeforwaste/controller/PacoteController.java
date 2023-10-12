@@ -73,7 +73,6 @@ public class PacoteController {
         
     @GetMapping("/{idEmpresa}/byEmpresa")
     public ResponseEntity<Object> getByIdEmpresa(@PathVariable(value = "idEmpresa") int idEmpresa) {
-        System.out.println("fcccccyugchdkxmlsç,"+idEmpresa);
         List<PacoteResponse> pacotes = pacoteService.findAllByIdEmpresa(idEmpresa);
         return ResponseEntity.status(HttpStatus.OK).body(pacotes);
     }
