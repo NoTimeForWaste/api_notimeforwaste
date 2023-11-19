@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteDTO {
+public class ClienteDto {
     @NotNull 
     @Size(max=100)
     private String nmCliente;

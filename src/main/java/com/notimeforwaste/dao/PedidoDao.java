@@ -25,9 +25,11 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 public interface PedidoDao {
 
         @GetGeneratedKeys
-        @SqlUpdate("insert into Pedido (idCliente, status, idFormaPagamento, idFormaEntrega, frete, cancelado, idPacote, dtPedido, idEndereco) "
+        @SqlUpdate("INSERT INTO Pedido (idCliente, status, idFormaPagamento, idFormaEntrega, frete, cancelado, idPacote, dtPedido, idEndereco, observacao) "
                         +
-                        "values (:idCliente, :status, :idFormaPagamento, :idFormaEntrega, :frete, :cancelado, :idPacote, :dtPedido, :idEndereco)")
+                        "VALUES (:idCliente, :status, :idFormaPagamento, :idFormaEntrega, :frete, :cancelado, :idPacote, :dtPedido, "
+                        +
+                        "CASE WHEN :idEndereco != -1 THEN :idEndereco ELSE NULL END, :observacao)")
         int insert(@BindBean Pedido pedido);
 
         @SqlQuery("select * from Pedido")
@@ -57,14 +59,19 @@ public interface PedidoDao {
         @SqlUpdate("update Pedido " +
                         " set status = :status, " +
                         " where idPedido = :idPedido;")
-        int updateStatus(@Bind("status") String status, @Bind("idPedido") int idPedido);
+        int updateStatus(@Bind("status") int status, @Bind("idPedido") int idPedido);
+
+        @SqlUpdate("update Pedido " +
+                        " set cancelado = :cancelado " +
+                        " where idPedido = :idPedido;")
+        int cancelar(@Bind("cancelado") Boolean cancelado, @Bind("idPedido") int idPedido);
 
         @SqlUpdate("delete " +
                         " from Pedido " +
                         " where idPedido = :idPedido;")
         int delete(@Bind("idPedido") int idPedido);
 
-        @SqlUpdate("SELECT COUNT(*) FROM Pedido WHERE idPacote = :idPacote")
+        @SqlQuery("SELECT COUNT(*) FROM Pedido WHERE idPacote = :idPacote")
         int existsByIdPacote(@Bind("idPacote") int idPacote);
 
         @SqlQuery("SELECT Pedido.idPedido, Pedido.dtPedido, Pedido.status, Pedido.cancelado, Pedido.frete, " +

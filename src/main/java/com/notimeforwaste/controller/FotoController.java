@@ -33,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/notimeforwaste/foto")
 public class FotoController {
 
-    private static final String uploadDirectory = "C:\\fotos";
+    private static final String uploadDirectory = "C:\\xampp\\htdocs\\img";
     private final FotoService fotoService;
 
     public FotoController(FotoService fotoService) {
@@ -55,7 +55,7 @@ public class FotoController {
             File file = new File(uploadDirectory, fileName + fileExtension);
             document.transferTo(file);
 
-            String imageUrl = uploadDirectory + "\\" + fileName + fileExtension;
+            String imageUrl = "http://localhost/img/"+ fileName + fileExtension;
             Foto foto = new Foto();
             foto.setFotoUrl(imageUrl);
             return ResponseEntity.status(HttpStatus.OK).body(fotoService.save(foto));

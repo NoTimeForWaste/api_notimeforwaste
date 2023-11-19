@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.notimeforwaste.dto.ClienteDTO;
+import com.notimeforwaste.dto.ClienteDto;
 import com.notimeforwaste.model.Cliente;
 import com.notimeforwaste.model.PacoteFormaPagamento;
 import com.notimeforwaste.service.FormaPagamentoService;

@@ -22,8 +22,9 @@ public class PedidoResponse {
     private int idPedido;
     private int idCliente;
     private String nmCliente;
+    private String observacao;
     private Endereco endereco;
-    private String status;
+    private int status;
     private Boolean cancelado;
     private Double frete;
     private int idFormaEntrega;

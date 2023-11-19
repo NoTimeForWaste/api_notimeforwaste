@@ -1,7 +1,6 @@
 package com.notimeforwaste.model;
 
-import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -22,10 +21,11 @@ public class Pedido {
     private int idCliente;
     private int idPacote;
     private int idEndereco;
-    private String status;
+    private int status;
     private int idFormaPagamento;
     private int idFormaEntrega;
     private double frete;
     private Boolean cancelado;
-    private Date dtPedido;
+    private Timestamp  dtPedido;
+    private String observacao;
 }

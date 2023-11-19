@@ -38,6 +38,6 @@ public interface FormaPagamentoDao {
     @SqlUpdate("DELETE FROM FormaPagamento WHERE idFormaPagamento = :idFormaPagamento")
     int delete(@Bind("idFormaPagamento") int idFormaPagamento);
 
-    @SqlUpdate("SELECT COUNT(*) FROM FormaPagamento WHERE idFormaPagamento = :idFormaPagamento")
+    @SqlQuery("SELECT COUNT(*) FROM FormaPagamento WHERE idFormaPagamento = :idFormaPagamento;")
     int existsById(@Bind("idFormaPagamento") int idFormaPagamento);
 }

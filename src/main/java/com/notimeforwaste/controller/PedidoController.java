@@ -64,16 +64,13 @@ public class PedidoController {
     @Transactional
     public ResponseEntity<Object> save(@RequestBody Pedido pedido) {
 
-        Pacote pacote = this.pacoteService.findById(pedido.getIdPacote());
+        int existsByPacote = this.pedidoService.existsByIdPacote(pedido.getIdPacote());
 
-        if (pacote != null) {
+        if (existsByPacote <= 0) {
             if (pedidoService.existsByIdPacote(pedido.getIdPacote()) <= 0) {
+                System.out.println(pedido);
                 if (clienteService.existsById(pedido.getIdCliente()) <= 0) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("Cliente não encontrado.");
-                }
-
-                if (enderecoService.existsById(pedido.getIdEndereco()) <= 0) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Endereco inválido.!");
                 }
 
                 if (formaEntregaService.existsById(pedido.getIdFormaEntrega()) <= 0) {
@@ -83,8 +80,16 @@ public class PedidoController {
                 if (foraPagamentoService.existsById(pedido.getIdFormaPagamento()) <= 0) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("Forma de pagamento inválida.");
                 }
+
+                if (pedido.getIdFormaEntrega() == 1) {
+                    if (enderecoService.existsById(pedido.getIdEndereco()) <= 0) {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body("Endereco inválido.!");
+                    }
+                }
+
                 Pedido res = pedidoService.save(pedido);
-                return res != null ?  ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.save(res)) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar pedido!");
+                return res != null ? ResponseEntity.status(HttpStatus.CREATED).body(res)
+                        : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar pedido!");
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body("Lamentamos, mas esse pacote não está mais disponível para compra.");
@@ -96,16 +101,40 @@ public class PedidoController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/status/{id}")
     public ResponseEntity<Object> updateStatus(@PathVariable(value = "id") int id,
-            @RequestBody String status) {
-        if (pedidoService.findById(id) != null) {
-            if (status.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("O status do pedido não pode ser vzio!");
+            @RequestBody int status) {
+        Pedido pedido = pedidoService.findById(id);
+        if (pedido != null) {
+
+            if (pedido.getCancelado() == true) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("O pedido já foi cancelado e não pode ter seu status alterado!");
+            }
+
+            if (status < 0 || status > 5) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Status inválido!");
             }
 
             int res = pedidoService.updateStatus(status, id);
-            return res > 0 ? ResponseEntity.status(HttpStatus.OK).body(status) : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao atualizzar status");
+            return res > 0 ? ResponseEntity.status(HttpStatus.OK).body(status)
+                    : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao atualizzar status");
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Pedido não encontrado!");
+
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<Object> cancelar(@PathVariable(value = "id") int id) {
+        Pedido pedido = pedidoService.findById(id);
+        if (pedido != null) {
+
+            if (pedido.getCancelado() == true) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("O pedido já foi cancelado!");
+            }
+            int res = pedidoService.cancelar(id, true);
+            return res > 0 ? ResponseEntity.status(HttpStatus.OK).body(res)
+                    : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao cancelar pedido");
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Pedido não encontrado!");
 

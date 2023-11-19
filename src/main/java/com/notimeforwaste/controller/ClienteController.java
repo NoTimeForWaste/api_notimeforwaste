@@ -4,7 +4,7 @@
  */
 package com.notimeforwaste.controller;
 
-import com.notimeforwaste.dto.ClienteDTO;
+import com.notimeforwaste.dto.ClienteDto;
 import com.notimeforwaste.model.Cliente;
 import com.notimeforwaste.model.Empresa;
 import com.notimeforwaste.response.ClienteResponse;
@@ -41,7 +41,7 @@ public class ClienteController {
     }
 
     @PostMapping({ "", "/" })
-    public ResponseEntity<Object> save(@RequestBody @Valid ClienteDTO clienteDTO) {
+    public ResponseEntity<Object> save(@RequestBody @Valid ClienteDto clienteDTO) {
         var cliente = new Cliente();
         BeanUtils.copyProperties(clienteDTO, cliente);
         if (clienteService.existsByEmail(cliente.getEmail()) > 0) {
@@ -91,7 +91,7 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCliente(@PathVariable(value = "id") int id,
-            @RequestBody @Valid ClienteDTO clienteDto) {
+            @RequestBody @Valid ClienteDto clienteDto) {
         ClienteResponse clienteOptional = clienteService.findById(id);
         if (clienteOptional == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");

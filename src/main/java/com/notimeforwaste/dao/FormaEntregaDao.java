@@ -37,7 +37,8 @@ public interface FormaEntregaDao {
     @SqlUpdate("DELETE FROM FormaEntrega WHERE idFormaEntrega = :idFormaEntrega")
     int delete(@Bind("idFormaEntrega") int idFormaEntrega);
 
-    @SqlUpdate("SELECT COUNT(*) FROM FormaEntrega  WHERE idFormaEntrega = :idFormaEntrega")
+    
+    @SqlQuery("SELECT COUNT(*) FROM FormaEntrega WHERE idFormaEntrega = :idFormaEntrega;")
     int existsById(@Bind("idFormaEntrega") int idFormaEntrega);
 
 }

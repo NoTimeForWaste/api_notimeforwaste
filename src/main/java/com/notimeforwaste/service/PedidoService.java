@@ -38,9 +38,12 @@ public class PedidoService {
     }
 
     public Pedido save(Pedido pedido) {
+        if(pedido.getIdFormaEntrega() == 1){
+            pedido.setIdEndereco(-1);
+        }
         int idPedido = pedidoDao.insert(pedido);
         pedido.setIdPedido(idPedido);
-        return idPedido > 0 ?  pedido : null;
+        return idPedido > 0 ? pedido : null;
     }
 
     public List<Pedido> findAll() {
@@ -54,36 +57,41 @@ public class PedidoService {
     public List<PedidoResponse> findByClientId(int idCliente) {
         List<Pedido> pedidos = pedidoDao.findByClientId(idCliente);
         List<PedidoResponse> pedidosResponses = new ArrayList<PedidoResponse>();
-        if(pedidos != null){
-            for(int i = 0; i < pedidos.size(); i++){
-              pedidosResponses.add(this.findResponseByIdPedido(pedidos.get(i).getIdPedido()));
+        if (pedidos != null) {
+            for (int i = 0; i < pedidos.size(); i++) {
+                pedidosResponses.add(this.findResponseByIdPedido(pedidos.get(i).getIdPedido()));
             }
         }
         return pedidosResponses;
     }
 
     public List<PedidoResponse> findByCompanyId(int idEmpresa) {
-        List<Pedido> pedidos =  pedidoDao.findByCompanyId(idEmpresa);
+        List<Pedido> pedidos = pedidoDao.findByCompanyId(idEmpresa);
         List<PedidoResponse> pedidosResponses = new ArrayList<PedidoResponse>();
-        if(pedidos != null){
-            for(int i = 0; i < pedidos.size(); i++){
-              pedidosResponses.add(this.findResponseByIdPedido(pedidos.get(i).getIdPedido()));
+        if (pedidos != null) {
+            for (int i = 0; i < pedidos.size(); i++) {
+                pedidosResponses.add(this.findResponseByIdPedido(pedidos.get(i).getIdPedido()));
             }
         }
         return pedidosResponses;
     }
 
-    public int  update(Pedido pedido) {
+    public int update(Pedido pedido) {
         return pedidoDao.update(pedido);
     }
 
-    public int updateStatus(String status, int idPedido) {
+    public int updateStatus(int status, int idPedido) {
         return pedidoDao.updateStatus(status, idPedido);
     }
 
-    public int  delete(int idPedido) {
-       return pedidoDao.delete(idPedido);
+    public int delete(int idPedido) {
+        return pedidoDao.delete(idPedido);
     }
+
+     public int cancelar(int idPedido, Boolean cancelado) {
+        return pedidoDao.cancelar(cancelado, idPedido);
+    }
+
 
     public int existsByIdPacote(int idPacote) {
         return pedidoDao.existsByIdPacote(idPacote);
@@ -91,7 +99,7 @@ public class PedidoService {
 
     public PedidoResponse findResponseByIdPedido(int idPedido) {
         Pedido pedido = findById(idPedido);
-        if(pedido ==  null){
+        if (pedido == null) {
             return null;
         }
         Endereco endereco = enderecoService.findById(pedido.getIdEndereco());
@@ -108,6 +116,7 @@ public class PedidoService {
         pedidoResponse.setPacote(pacoteResponse);
         pedidoResponse.setStatus(pedido.getStatus());
         pedidoResponse.setIdFomPagamento(pedido.getIdFormaPagamento());
+        pedidoResponse.setObservacao(pedido.getObservacao());
         pedidoResponse.setIdFormaEntrega(pedido.getIdFormaEntrega());
         return pedidoResponse;
     }
