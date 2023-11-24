@@ -38,10 +38,9 @@ public class PedidoService {
     }
 
     public Pedido save(Pedido pedido) {
-        if(pedido.getIdFormaEntrega() == 1){
-            pedido.setIdEndereco(-1);
-        }
-        int idPedido = pedidoDao.insert(pedido);
+
+        int idPedido = pedido.getIdFormaEntrega() == 1 ? pedidoDao.insertWitchIdEndereco(pedido)
+                : pedidoDao.insertWitchNotIdEndereco(pedido);
         pedido.setIdPedido(idPedido);
         return idPedido > 0 ? pedido : null;
     }
@@ -88,10 +87,9 @@ public class PedidoService {
         return pedidoDao.delete(idPedido);
     }
 
-     public int cancelar(int idPedido, Boolean cancelado) {
+    public int cancelar(int idPedido, Boolean cancelado) {
         return pedidoDao.cancelar(cancelado, idPedido);
     }
-
 
     public int existsByIdPacote(int idPacote) {
         return pedidoDao.existsByIdPacote(idPacote);

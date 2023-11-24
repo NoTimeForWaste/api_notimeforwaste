@@ -86,7 +86,7 @@ public class PedidoController {
                         return ResponseEntity.status(HttpStatus.CONFLICT).body("Endereco inválido.!");
                     }
                 }
-
+                System.out.print(pedido);
                 Pedido res = pedidoService.save(pedido);
                 return res != null ? ResponseEntity.status(HttpStatus.CREATED).body(res)
                         : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao salvar pedido!");
@@ -132,6 +132,11 @@ public class PedidoController {
             if (pedido.getCancelado() == true) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("O pedido já foi cancelado!");
             }
+
+            if (pedido.getStatus() >= 3) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("O pedido não pode mais ser cancelado!");
+            }
+
             int res = pedidoService.cancelar(id, true);
             return res > 0 ? ResponseEntity.status(HttpStatus.OK).body(res)
                     : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao cancelar pedido");

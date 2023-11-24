@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.notimeforwaste.controller;
+
 import com.notimeforwaste.model.Foto;
 import com.notimeforwaste.service.FotoService;
 import java.io.File;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +58,7 @@ public class FotoController {
             File file = new File(uploadDirectory, fileName + fileExtension);
             document.transferTo(file);
 
-            String imageUrl = "http://localhost/img/"+ fileName + fileExtension;
+            String imageUrl = "http://localhost/img/" + fileName + fileExtension;
             Foto foto = new Foto();
             foto.setFotoUrl(imageUrl);
             return ResponseEntity.status(HttpStatus.OK).body(fotoService.save(foto));
@@ -82,9 +85,8 @@ public class FotoController {
                 : ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao deletar.");
     }
 
-    @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<Object> updateFoto(@PathVariable(value = "id") int id,
-            @RequestParam MultipartFile newDocument) {
+    @RequestMapping(path = "/{id}", method = PUT, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<Object> updateFoto(@RequestPart MultipartFile document, @PathVariable(value = "id") int id) {
         try {
             Foto existingFoto = fotoService.findById(id);
             if (existingFoto == null) {
@@ -92,19 +94,17 @@ public class FotoController {
             }
 
             String existingImageUrl = existingFoto.getFotoUrl();
+            String existingFileName = existingImageUrl.substring(existingImageUrl.lastIndexOf("/") + 1);
 
-            File existingFile = new File(existingImageUrl);
-            if (!existingFile.exists()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Arquivo de foto existente não encontrado.");
+            File existingFile = new File(uploadDirectory, existingFileName);
+            if (existingFile.exists()) {
+                existingFile.delete();
             }
 
-            if (!existingFile.delete()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Erro ao excluir o arquivo de foto existente.");
-            }
+            File newFile = new File(uploadDirectory, existingFileName);
+            document.transferTo(newFile);
 
-            newDocument.transferTo(existingFile);
-            return ResponseEntity.status(HttpStatus.OK).body(existingFoto);
+            return ResponseEntity.status(HttpStatus.OK).body("Foto atualizada com sucesso.");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar o arquivo.");
         }

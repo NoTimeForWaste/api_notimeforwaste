@@ -36,7 +36,8 @@ public class FotoService {
     }
 
     public Foto findById(int id) {
-        return fotoDao.findById(id);
+        Foto foto = fotoDao.findById(id);
+        return foto.getIdFoto() <= 0 ? null : foto;
     }
 
     public int delete(int idFoto) {

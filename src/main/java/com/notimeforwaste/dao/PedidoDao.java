@@ -27,10 +27,15 @@ public interface PedidoDao {
         @GetGeneratedKeys
         @SqlUpdate("INSERT INTO Pedido (idCliente, status, idFormaPagamento, idFormaEntrega, frete, cancelado, idPacote, dtPedido, idEndereco, observacao) "
                         +
-                        "VALUES (:idCliente, :status, :idFormaPagamento, :idFormaEntrega, :frete, :cancelado, :idPacote, :dtPedido, "
+                        "VALUES (:idCliente, :status, :idFormaPagamento, :idFormaEntrega, :frete, :cancelado, :idPacote, :dtPedido, :idEndereco, :observacao)")
+        int insertWitchIdEndereco(@BindBean Pedido pedido);
+
+               @GetGeneratedKeys
+        @SqlUpdate("INSERT INTO Pedido (idCliente, status, idFormaPagamento, idFormaEntrega, frete, cancelado, idPacote, dtPedido, observacao) "
                         +
-                        "CASE WHEN :idEndereco != -1 THEN :idEndereco ELSE NULL END, :observacao)")
-        int insert(@BindBean Pedido pedido);
+                        "VALUES (:idCliente, :status, :idFormaPagamento, :idFormaEntrega, :frete, :cancelado, :idPacote, :dtPedido, :observacao)")
+        int insertWitchNotIdEndereco(@BindBean Pedido pedido);
+
 
         @SqlQuery("select * from Pedido")
         List<Pedido> findAll();
@@ -41,7 +46,7 @@ public interface PedidoDao {
         @SqlQuery("select * from Pedido where idCliente = :idCliente")
         List<Pedido> findByClientId(@Bind("idCliente") int idCliente);
 
-        @SqlQuery("select * from Pedido where idEndereco in (select idEndereco from Endereco where idEmpresa = :idEmpresa)")
+        @SqlQuery("SELECT * FROM Pedido WHERE idPacote IN (SELECT idPacote FROM Pacote WHERE idEmpresa = :idEmpresa)")
         List<Pedido> findByCompanyId(@Bind("idEmpresa") int idEmpresa);
 
         @SqlUpdate("update Pedido " +
@@ -57,7 +62,7 @@ public interface PedidoDao {
         int update(@BindBean Pedido pedido);
 
         @SqlUpdate("update Pedido " +
-                        " set status = :status, " +
+                        " set status = :status " +
                         " where idPedido = :idPedido;")
         int updateStatus(@Bind("status") int status, @Bind("idPedido") int idPedido);
 
